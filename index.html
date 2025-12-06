@@ -264,11 +264,11 @@ function calcFooting(){
 
   const displayVol = vol < 1 ? vol.toFixed(3) : Math.round(vol);
 
-  // MATERIALS ESTIMATE (1:2:4 mix)
+  // MATERIALS ESTIMATE (Tamang formula para sa iyong example)
   const totalVolume = vol;
-  const cementBags = Math.ceil(totalVolume * 7);        // approx 7 bags per cu.m
-  const sandVol = (totalVolume * 2/7).toFixed(3);       // cu.m
-  const gravelVol = (totalVolume * 4/7).toFixed(3);     // cu.m
+  const cementBags = Math.ceil(totalVolume * 9);     // 9 bags per cu.m
+  const sandVol = (totalVolume * 0.5).toFixed(2);   // sand cu.m
+  const gravelVol = (totalVolume * 1).toFixed(2);   // gravel cu.m
 
   fOut.innerHTML = `
     <div class="out">VOLUME: ${displayVol} CU.M</div>
