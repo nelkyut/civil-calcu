@@ -136,15 +136,6 @@ input[type=number], select{
   font-size:13px;
   padding:6px;
 }
-.result-list{
-  display:grid;
-  gap:8px;
-}
-.small-muted{
-  font-size:12px;
-  color:#777;
-  text-transform:uppercase;
-}
 @media(max-width:900px){
   .grid{grid-template-columns:1fr;}
 }
@@ -169,8 +160,6 @@ input[type=number], select{
   <div class="subtabs" id="subtabs"></div>
   <div class="card" id="main"></div>
   <div class="card">
-    <h3>GLOBAL OUTPUTS</h3>
-    <div id="globalOutputs" class="result-list"></div>
     <button class="btn" onclick="downloadProject()">DOWNLOAD HTML</button>
     <p class="small-muted">UPLOAD AS INDEX.HTML SA GITHUB</p>
   </div>
@@ -197,8 +186,6 @@ const frontPage=document.getElementById('frontPage');
 const categoryPage=document.getElementById('categoryPage');
 const main=document.getElementById('main');
 const subtabsEl=document.getElementById('subtabs');
-const globalOutputs=document.getElementById('globalOutputs');
-let globalData = {};
 
 // CREATE FRONT PAGE TILES
 categories.forEach(cat=>{
@@ -223,7 +210,6 @@ categories.forEach(cat=>{
 function openCategory(cat){
   frontPage.style.display='none';
   categoryPage.style.display='block';
-  globalOutputs.innerHTML='';
 
   if(cat.subtabs.length>0){
     subtabsEl.innerHTML='';
@@ -270,22 +256,6 @@ function calcFooting(){
   const L=+fL.value, W=+fW.value, T=+fT.value/1000, n=+fN.value;
   const vol=L*W*T*n;
   fOut.innerHTML=`<div class="out">VOLUME: ${vol.toFixed(3)} CU.M</div>`;
-  setGlobal("FOOTING",vol);
-}
-
-// GLOBAL DATA HANDLER
-function setGlobal(name,value){
-  globalData[name]=value;
-  renderGlobalOutputs();
-}
-function renderGlobalOutputs(){
-  globalOutputs.innerHTML='';
-  for(const k in globalData){
-    const div=document.createElement('div');
-    div.className='out small';
-    div.textContent=`${k}: ${globalData[k].toFixed(3)}`;
-    globalOutputs.appendChild(div);
-  }
 }
 
 // DOWNLOAD FUNCTION
