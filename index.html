@@ -1,291 +1,231 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Civil Construction Calculator — All-in-One</title>
+<meta charset="UTF-8">
+<title>Civil Construction Calculator</title>
 <style>
-  :root{--bg:#f6f7fb;--card:#fff;--accent:#d63384;--muted:#6b6b6b}
-  body{font-family:Inter,Arial,Segoe UI,sans-serif;background:var(--bg);margin:0;padding:18px;color:#111}
-  h1{margin:0 0 14px}
-  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px}
-  .card{background:var(--card);padding:14px;border-radius:10px;box-shadow:0 6px 18px rgba(18,18,18,0.06)}
-  label{display:block;font-size:13px;margin-top:8px;color:var(--muted)}
-  input, select{width:100%;padding:8px;border-radius:6px;border:1px solid #ddd;margin-top:6px;box-sizing:border-box}
-  button{margin-top:10px;width:100%;padding:10px;border-radius:8px;border:0;background:var(--accent);color:white;font-weight:600;cursor:pointer}
-  .result{margin-top:10px;padding:8px;background:#f2f6fb;border-radius:6px;font-weight:600}
-  small{color:var(--muted)}
-  pre{background:#111;color:#fff;padding:10px;border-radius:6px;overflow:auto}
+    body { font-family: Arial, sans-serif; padding: 20px; background: #f2f2f2; }
+    h1 { text-align: center; margin-bottom: 30px; }
+    .box {
+        background: white; padding: 20px; border-radius: 10px;
+        margin-bottom: 25px; box-shadow: 0 0 10px rgba(0,0,0,0.15);
+    }
+    input, select {
+        width: 100%; padding: 10px; margin-top: 7px;
+        border: 1px solid #bbb; border-radius: 5px;
+    }
+    button {
+        width: 100%; padding: 12px; margin-top: 10px;
+        background: #007bff; border: none; color: white;
+        font-size: 16px; border-radius: 5px; cursor: pointer;
+    }
+    .result { margin-top: 12px; font-weight: bold; color: #222; }
 </style>
 </head>
 <body>
 
-<h1>Civil Construction Calculator — All-in-One</h1>
-<p><small>Bossing, kompleto na — copy-paste mo lang sa index.html. Lahat ng kalkulasyon ay naka-include.</small></p>
+<h1>CIVIL ENGINEERING CALCULATOR</h1>
 
-<div class="grid">
-
-  <!-- Concrete Volume -->
-  <div class="card">
-    <h3>Concrete Volume (m³)</h3>
-    <label>Length (m)</label><input id="len" type="number" step="any" />
-    <label>Width (m)</label><input id="wid" type="number" step="any" />
-    <label>Height / Thickness (m)</label><input id="ht" type="number" step="any" />
-    <button onclick="calcVolume()">Compute Volume</button>
-    <div class="result" id="volRes">—</div>
-  </div>
-
-  <!-- Beam Volume -->
-  <div class="card">
-    <h3>Beam Volume (m³)</h3>
-    <label>Beam Length (m)</label><input id="beamL" type="number" step="any" />
-    <label>Beam Width (m)</label><input id="beamW" type="number" step="any" />
-    <label>Beam Height (m)</label><input id="beamH" type="number" step="any" />
-    <button onclick="calcBeam()">Compute Beam Volume</button>
-    <div class="result" id="beamRes">—</div>
-  </div>
-
-  <!-- Column Volume -->
-  <div class="card">
-    <h3>Column Volume (m³)</h3>
-    <label>Column Height (m)</label><input id="colH" type="number" step="any" />
-    <label>Column Width (m)</label><input id="colW" type="number" step="any" />
-    <label>Column Depth (m)</label><input id="colD" type="number" step="any" />
-    <button onclick="calcColumn()">Compute Column Volume</button>
-    <div class="result" id="colRes">—</div>
-  </div>
-
-  <!-- Slab Area -->
-  <div class="card">
-    <h3>Slab Area (m²)</h3>
-    <label>Length (m)</label><input id="slabL" type="number" step="any" />
-    <label>Width (m)</label><input id="slabW" type="number" step="any" />
-    <button onclick="calcSlab()">Compute Area</button>
-    <div class="result" id="slabRes">—</div>
-  </div>
-
-  <!-- Footing Volume -->
-  <div class="card">
-    <h3>Footing Volume (m³)</h3>
-    <label>Length (m)</label><input id="footL" type="number" step="any" />
-    <label>Width (m)</label><input id="footW" type="number" step="any" />
-    <label>Depth / Height (m)</label><input id="footH" type="number" step="any" />
-    <button onclick="calcFooting()">Compute Footing Volume</button>
-    <div class="result" id="footRes">—</div>
-  </div>
-
-  <!-- Steel Bar Weight -->
-  <div class="card">
-    <h3>Steel Bar Weight (kg)</h3>
-    <label>Diameter (mm)</label><input id="dia" type="number" step="any" />
-    <label>Length per bar (m)</label><input id="lengthBar" type="number" step="any" />
-    <label>Quantity</label><input id="qtyBar" type="number" step="1" />
-    <button onclick="calcSteel()">Compute Weight</button>
-    <div class="result" id="steelRes">—</div>
-    <small>Formula: w(kg) = 0.00617 × d² × L × qty</small>
-  </div>
-
-  <!-- Rebar Spacing Calculator -->
-  <div class="card">
-    <h3>Rebar Spacing Calculator (per width)</h3>
-    <label>Width to be reinforced (m)</label><input id="rWidth" type="number" step="any" />
-    <label>Spacing (mm)</label><input id="rSpacing" type="number" step="any" value="200" />
-    <button onclick="calcRebarSpacing()">Compute # of Bars</button>
-    <div class="result" id="rebarRes">—</div>
-    <small>Assumes bars run across width. Formula: n = floor(width(mm)/spacing) + 1</small>
-  </div>
-
-  <!-- RSB / Cutting List -->
-  <div class="card">
-    <h3>RSB / Cutting List (simple)</h3>
-    <label>Bar Diameter (mm)</label><input id="rsbDia" type="number" step="any" />
-    <label>Bar Length (m) — per bar</label><input id="rsbLen" type="number" step="any" />
-    <label>Quantity</label><input id="rsbQty" type="number" step="1" />
-    <button onclick="calcRSB()">Generate Cutting List</button>
-    <div class="result" id="rsbRes">—</div>
-    <small>Weight per m = 0.00617 × d²</small>
-  </div>
-
-  <!-- Bar Bending Schedule (simplified stirrup) -->
-  <div class="card">
-    <h3>Bar Bending Schedule — Stirrups (simplified)</h3>
-    <label>Stirrup inside width b (mm)</label><input id="stb" type="number" step="any" />
-    <label>Stirrup inside depth h (mm)</label><input id="sth" type="number" step="any" />
-    <label>Bar diameter (mm)</label><input id="stdia" type="number" step="any" />
-    <label>Quantity of stirrups</label><input id="stqty" type="number" step="1" />
-    <button onclick="calcStirrup()">Compute Bending Length</button>
-    <div class="result" id="stRes">—</div>
-    <small>Hook length used = 9 × d (mm) per hook (common practice). Total length = 2*(b+h) + 2*hook</small>
-  </div>
-
-  <!-- Cement-Sand-Gravel Estimator -->
-  <div class="card">
-    <h3>Cement • Sand • Gravel Estimator</h3>
-    <label>Concrete Volume (m³)</label><input id="mixVol" type="number" step="any" />
-    <button onclick="calcCSG()">Estimate Materials</button>
-    <div class="result" id="csgRes">—</div>
-    <small>Default: Cement 6 bags/m³, Sand 0.5 m³/m³, Gravel 0.8 m³/m³ (approx).</small>
-  </div>
-
-  <!-- Cement Bags Calculator (custom bags per m3) -->
-  <div class="card">
-    <h3>Cement Bags Calculator (custom)</h3>
-    <label>Volume (m³)</label><input id="cbVol" type="number" step="any" />
-    <label>Bags per m³ (default 6)</label><input id="bagsPer" type="number" step="any" value="6" />
-    <button onclick="calcCementBags()">Compute Bags</button>
-    <div class="result" id="cbRes">—</div>
-  </div>
-
-  <!-- Load Converter -->
-  <div class="card">
-    <h3>Load Converter: kN → kgf</h3>
-    <label>Force (kN)</label><input id="knVal" type="number" step="any" />
-    <button onclick="convertKN()">Convert</button>
-    <div class="result" id="knRes">—</div>
-    <small>1 kN ≈ 101.97162 kgf</small>
-  </div>
-
+<!-- Concrete Volume -->
+<div class="box">
+    <h2>Concrete Volume (m³)</h2>
+    <input id="cvL" type="number" placeholder="Length (m)">
+    <input id="cvW" type="number" placeholder="Width (m)">
+    <input id="cvH" type="number" placeholder="Height (m)">
+    <button onclick="calcConcrete()">Calculate</button>
+    <div class="result" id="cvRes"></div>
 </div>
 
-<hr style="margin:18px 0">
+<!-- Slab Area -->
+<div class="box">
+    <h2>Slab Area (m²)</h2>
+    <input id="slabL" type="number" placeholder="Length (m)">
+    <input id="slabW" type="number" placeholder="Width (m)">
+    <button onclick="calcSlab()">Calculate</button>
+    <div class="result" id="slabRes"></div>
+</div>
 
-<p><small>Notes: All results are approximate. Check local codes & tolerances for hooks/splices/cover. Kung gusto mo i-export to CSV ang RSB or BBS, sabihan mo lang — gagawa ako ng export button.</small></p>
+<!-- Footing Volume -->
+<div class="box">
+    <h2>Footing Volume (m³)</h2>
+    <input id="footL" type="number" placeholder="Footing Length (m)">
+    <input id="footW" type="number" placeholder="Footing Width (m)">
+    <input id="footH" type="number" placeholder="Footing Height (m)">
+    <button onclick="calcFooting()">Calculate</button>
+    <div class="result" id="footRes"></div>
+</div>
+
+<!-- Beam Volume -->
+<div class="box">
+    <h2>Beam Volume (m³)</h2>
+    <input id="beamL" type="number" placeholder="Beam Length (m)">
+    <input id="beamW" type="number" placeholder="Beam Width (m)">
+    <input id="beamH" type="number" placeholder="Beam Height (m)">
+    <button onclick="calcBeam()">Calculate</button>
+    <div class="result" id="beamRes"></div>
+</div>
+
+<!-- Column Volume -->
+<div class="box">
+    <h2>Column Volume (m³)</h2>
+    <input id="colL" type="number" placeholder="Column Length (m)">
+    <input id="colW" type="number" placeholder="Column Width (m)">
+    <input id="colH" type="number" placeholder="Column Height (m)">
+    <button onclick="calcColumn()">Calculate</button>
+    <div class="result" id="colRes"></div>
+</div>
+
+<!-- Steel Bar Weight -->
+<div class="box">
+    <h2>Steel Bar Weight (kg)</h2>
+    <input id="sbDia" type="number" placeholder="Diameter (mm)">
+    <input id="sbLen" type="number" placeholder="Length (m)">
+    <button onclick="calcSteel()">Calculate</button>
+    <div class="result" id="sbRes"></div>
+</div>
+
+<!-- Rebar Spacing -->
+<div class="box">
+    <h2>Rebar Spacing Calculator</h2>
+    <input id="rsLen" type="number" placeholder="Length of Slab/Beam (m)">
+    <input id="rsSpace" type="number" placeholder="Spacing (mm)">
+    <button onclick="calcRebarSpacing()">Calculate</button>
+    <div class="result" id="rsRes"></div>
+</div>
+
+<!-- Cutting List -->
+<div class="box">
+    <h2>Rebar Cutting List</h2>
+    <input id="cutQty" type="number" placeholder="Quantity">
+    <input id="cutLen" type="number" placeholder="Cut Length (m)">
+    <button onclick="calcCutList()">Calculate</button>
+    <div class="result" id="cutRes"></div>
+</div>
+
+<!-- BBS Pattern -->
+<div class="box">
+    <h2>Bar Bending Schedule (Pattern Length)</h2>
+    <input id="pA" type="number" placeholder="A (m)">
+    <input id="pB" type="number" placeholder="B (m)">
+    <input id="pC" type="number" placeholder="C (m)">
+    <button onclick="calcBBS()">Calculate</button>
+    <div class="result" id="bbsRes"></div>
+</div>
+
+<!-- Cement Sand Gravel -->
+<div class="box">
+    <h2>Cement • Sand • Gravel Estimator</h2>
+    <input id="csgVol" type="number" placeholder="Concrete Volume (m³)">
+    <button onclick="calcCSG()">Calculate</button>
+    <div class="result" id="csgRes"></div>
+</div>
+
+<!-- Cement Bags -->
+<div class="box">
+    <h2>Cement Bags Needed</h2>
+    <input id="cemVol" type="number" placeholder="Concrete Volume (m³)">
+    <button onclick="calcCementBags()">Calculate</button>
+    <div class="result" id="cemRes"></div>
+</div>
+
+<!-- kN to kg -->
+<div class="box">
+    <h2>kN → kg Converter</h2>
+    <input id="knVal" type="number" placeholder="Value in kN">
+    <button onclick="knToKg()">Convert</button>
+    <div class="result" id="knRes"></div>
+</div>
+
+<!-- kg to kN -->
+<div class="box">
+    <h2>kg → kN Converter</h2>
+    <input id="kgVal" type="number" placeholder="Value in kg">
+    <button onclick="kgToKn()">Convert</button>
+    <div class="result" id="kgRes"></div>
+</div>
 
 <script>
-/* Utilities */
-function safeNum(v){ v = parseFloat(v); return isNaN(v) ? 0 : v; }
-function fmt(n, d=3){ return Number(n).toFixed(d); }
-
-/* Concrete Volume */
-function calcVolume(){
-  const L = safeNum(document.getElementById('len').value);
-  const W = safeNum(document.getElementById('wid').value);
-  const H = safeNum(document.getElementById('ht').value);
-  const vol = L * W * H;
-  document.getElementById('volRes').innerHTML = vol>0 ? `Volume: ${fmt(vol,3)} m³` : 'Enter valid dimensions.';
+// Concrete
+function calcConcrete(){
+    let L = cvL.value, W = cvW.value, H = cvH.value;
+    cvRes.innerHTML = "Volume: " + (L*W*H).toFixed(3) + " m³";
 }
 
-/* Beam Volume */
-function calcBeam(){
-  const L = safeNum(document.getElementById('beamL').value);
-  const W = safeNum(document.getElementById('beamW').value);
-  const H = safeNum(document.getElementById('beamH').value);
-  const vol = L * W * H;
-  document.getElementById('beamRes').innerHTML = vol>0 ? `Beam Volume: ${fmt(vol,3)} m³` : 'Enter valid dimensions.';
-}
-
-/* Column Volume */
-function calcColumn(){
-  const H = safeNum(document.getElementById('colH').value);
-  const W = safeNum(document.getElementById('colW').value);
-  const D = safeNum(document.getElementById('colD').value);
-  const vol = H * W * D;
-  document.getElementById('colRes').innerHTML = vol>0 ? `Column Volume: ${fmt(vol,3)} m³` : 'Enter valid dimensions.';
-}
-
-/* Slab Area */
+// Slab
 function calcSlab(){
-  const L = safeNum(document.getElementById('slabL').value);
-  const W = safeNum(document.getElementById('slabW').value);
-  const area = L * W;
-  document.getElementById('slabRes').innerHTML = area>0 ? `Slab Area: ${fmt(area,2)} m²` : 'Enter valid dimensions.';
+    slabRes.innerHTML = "Area: " + (slabL.value * slabW.value).toFixed(2) + " m²";
 }
 
-/* Footing Volume */
+// Footing
 function calcFooting(){
-  const L = safeNum(document.getElementById('footL').value);
-  const W = safeNum(document.getElementById('footW').value);
-  const H = safeNum(document.getElementById('footH').value);
-  const vol = L * W * H;
-  document.getElementById('footRes').innerHTML = vol>0 ? `Footing Volume: ${fmt(vol,3)} m³` : 'Enter valid dimensions.';
+    footRes.innerHTML =
+        "Volume: " + (footL.value * footW.value * footH.value).toFixed(3) + " m³";
 }
 
-/* Steel Weight (single bar or qty) */
+// Beam
+function calcBeam(){
+    beamRes.innerHTML =
+        "Volume: " + (beamL.value * beamW.value * beamH.value).toFixed(3) + " m³";
+}
+
+// Column
+function calcColumn(){
+    colRes.innerHTML =
+        "Volume: " + (colL.value * colW.value * colH.value).toFixed(3) + " m³";
+}
+
+// Steel Weight
 function calcSteel(){
-  const d = safeNum(document.getElementById('dia').value);
-  const L = safeNum(document.getElementById('lengthBar').value);
-  const q = safeNum(document.getElementById('qtyBar').value);
-  if(d<=0||L<=0||q<=0){ document.getElementById('steelRes').innerHTML='Enter valid diameter, length and qty.'; return; }
-  const weightPerBar = 0.00617 * d * d * L; // kg
-  const total = weightPerBar * q;
-  document.getElementById('steelRes').innerHTML = `Per Bar: ${fmt(weightPerBar,2)} kg · Quantity: ${q}<br>Total Weight: ${fmt(total,2)} kg`;
+    let w = 0.00617 * sbDia.value * sbDia.value * sbLen.value;
+    sbRes.innerHTML = "Weight: " + w.toFixed(2) + " kg";
 }
 
-/* Rebar Spacing */
+// Rebar Spacing
 function calcRebarSpacing(){
-  const widthM = safeNum(document.getElementById('rWidth').value);
-  const spacingMM = safeNum(document.getElementById('rSpacing').value);
-  if(widthM<=0||spacingMM<=0){ document.getElementById('rebarRes').innerHTML='Enter valid width and spacing.'; return; }
-  const widthMM = widthM * 1000;
-  const count = Math.floor(widthMM / spacingMM) + 1; // simple approach
-  const actualSpacing = widthMM / (count - 1);
-  document.getElementById('rebarRes').innerHTML = `Approx bars: ${count} bars<br>Actual spacing ≈ ${fmt(actualSpacing,0)} mm`;
+    let lengthM = rsLen.value;
+    let spacingM = rsSpace.value / 1000;
+    let qty = Math.ceil(lengthM / spacingM) + 1;
+    rsRes.innerHTML = "Required Bars: " + qty + " pcs";
 }
 
-/* RSB / Cutting List */
-function calcRSB(){
-  const d = safeNum(document.getElementById('rsbDia').value);
-  const L = safeNum(document.getElementById('rsbLen').value);
-  const q = safeNum(document.getElementById('rsbQty').value);
-  if(d<=0||L<=0||q<=0){ document.getElementById('rsbRes').innerHTML='Enter valid dia/length/qty.'; return; }
-  const wpm = 0.00617 * d * d; // kg per m
-  const weightPerBar = wpm * L;
-  const totalWeight = weightPerBar * q;
-  document.getElementById('rsbRes').innerHTML =
-    `Bar: Ø${d} mm · Length: ${fmt(L,3)} m · Qty: ${q}<br>` +
-    `Weight per m: ${fmt(wpm,4)} kg/m<br>` +
-    `Weight per bar: ${fmt(weightPerBar,2)} kg<br>Total weight: ${fmt(totalWeight,2)} kg`;
+// Cutting List
+function calcCutList(){
+    let total = cutQty.value * cutLen.value;
+    cutRes.innerHTML = "Total Length: " + total + " m";
 }
 
-/* Bar Bending Schedule (stirrup simplified) */
-function calcStirrup(){
-  const b = safeNum(document.getElementById('stb').value); // mm
-  const h = safeNum(document.getElementById('sth').value); // mm
-  const d = safeNum(document.getElementById('stdia').value); // mm
-  const q = safeNum(document.getElementById('stqty').value);
-  if(b<=0||h<=0||d<=0||q<=0){ document.getElementById('stRes').innerHTML='Enter valid b,h,d and qty.'; return; }
-  const hook = 9 * d; // mm per hook (common rule-of-thumb)
-  // inside perimeter (mm)
-  const perim = 2*(b + h);
-  const totalLenMM = perim + 2*hook; // include two hooks
-  const totalLenM = totalLenMM / 1000;
-  const wpm = 0.00617 * d * d;
-  const weightPerStirrup = wpm * totalLenM;
-  const totalWeight = weightPerStirrup * q;
-  document.getElementById('stRes').innerHTML =
-    `Per stirrup length: ${fmt(totalLenM,3)} m (incl. hooks)<br>` +
-    `Weight per stirrup: ${fmt(weightPerStirrup,3)} kg · Qty: ${q}<br>` +
-    `Total weight: ${fmt(totalWeight,3)} kg`;
+// BBS Pattern
+function calcBBS(){
+    let total = (+pA.value) + (+pB.value) + (+pC.value);
+    bbsRes.innerHTML = "Total Bar Length: " + total.toFixed(2) + " m";
 }
 
-/* Cement Sand Gravel Estimator */
+// CSG Estimator
 function calcCSG(){
-  const V = safeNum(document.getElementById('mixVol').value);
-  if(V<=0){ document.getElementById('csgRes').innerHTML='Enter valid volume.'; return; }
-  const cementBags = V * 6; // bags per m3
-  const sand = V * 0.5; // m3
-  const gravel = V * 0.8; // m3
-  document.getElementById('csgRes').innerHTML =
-    `Cement: ${fmt(cementBags,1)} bags (≈ 50kg/bag)<br>`+
-    `Sand: ${fmt(sand,3)} m³<br>`+
-    `Gravel: ${fmt(gravel,3)} m³`;
+    let V = csgVol.value;
+    let cement = V * 6;
+    let sand = V * 0.5;
+    let gravel = V * 0.8;
+    csgRes.innerHTML =
+        "Cement: " + cement.toFixed(1) + " bags<br>" +
+        "Sand: " + sand.toFixed(2) + " m³<br>" +
+        "Gravel: " + gravel.toFixed(2) + " m³";
 }
 
-/* Cement Bags (custom ratio) */
+// Cement Bags
 function calcCementBags(){
-  const V = safeNum(document.getElementById('cbVol').value);
-  const per = safeNum(document.getElementById('bagsPer').value);
-  if(V<=0||per<=0){ document.getElementById('cbRes').innerHTML='Enter valid volume and bags/m³.'; return; }
-  const total = V * per;
-  document.getElementById('cbRes').innerHTML = `Cement bags: ${fmt(total,2)} bags (at ${per} bags/m³)`;
+    cemRes.innerHTML = 
+        "Cement Needed: " + (cemVol.value * 6).toFixed(1) + " bags";
 }
 
-/* kN -> kgf */
-function convertKN(){
-  const kn = safeNum(document.getElementById('knVal').value);
-  if(kn===0){ document.getElementById('knRes').innerHTML='Enter a value in kN.'; return; }
-  const kgf = kn * 101.97162;
-  document.getElementById('knRes').innerHTML = `${fmt(kn,3)} kN ≈ ${fmt(kgf,3)} kgf`;
+// kN to kg
+function knToKg(){
+    knRes.innerHTML = (knVal.value * 101.9716).toFixed(2) + " kg";
+}
+
+// kg to kN
+function kgToKn(){
+    kgRes.innerHTML = (kgVal.value / 101.9716).toFixed(4) + " kN";
 }
 </script>
 
