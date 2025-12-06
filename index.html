@@ -6,49 +6,49 @@
 <title>BULARON CONSTRUCTION ESTIMATE CALCULATOR</title>
 <style>
 :root{
-  --accent:#f8d800;
-  --bg:#fff5cc;
+  --accent:#ffcc00;       /* Construction yellow */
+  --accent-dark:#e6b800;
+  --bg:#f2f2f2;           /* Light gray background */
   --card:#fff;
-  --muted:#666;
-  --accent-dark:#e6c000;
-  font-family: Inter, system-ui, Arial;
+  --muted:#555;
+  --btn:#ff9900;
+  --btn-hover:#e68a00;
+  --text:#222;
+  font-family: 'Arial', sans-serif;
 }
+
 body{
-  background:#f2f4f8;
+  background:var(--bg);
   margin:0;
   padding:20px;
 }
+
 .app{
-  max-width:1200px;
+  max-width:800px;
   margin:0 auto;
 }
+
 header{
   background:var(--accent);
   padding:14px;
   border-radius:10px;
   text-align:center;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  gap:14px;
+  color:var(--text);
 }
-header .text h1{
+
+header h1{
   margin:0;
-  font-size:20px;
+  font-size:22px;
   text-transform:uppercase;
 }
-header .text p{
-  margin:4px 0 0;
-  font-size:12px;
-  color:#333;
-  text-transform:uppercase;
-}
+
 .tiles{
   display:grid;
   grid-template-columns:repeat(auto-fit,minmax(120px,1fr));
   gap:12px;
   margin:18px 0;
 }
+
 .tile{
   background:#fff;
   border-radius:10px;
@@ -58,21 +58,24 @@ header .text p{
   transition:0.2s;
   display:flex;
   flex-direction:column;
-  justify-content:flex-start;
+  justify-content:center;
   align-items:center;
   aspect-ratio:1/1;
   padding:10px;
 }
+
 .tile:hover{
   transform:scale(1.05);
   box-shadow:0 4px 10px rgba(0,0,0,0.2);
 }
+
 .subtabs{
   display:flex;
   gap:8px;
   margin:12px 0;
   flex-wrap:wrap;
 }
+
 .subtab{
   background:#fff;
   padding:6px 12px;
@@ -82,10 +85,12 @@ header .text p{
   box-shadow:0 1px 2px rgba(0,0,0,.06);
   text-transform:uppercase;
 }
+
 .subtab.active{
   background:linear-gradient(180deg,var(--card),#f7f7f7);
   border:2px solid var(--accent-dark);
 }
+
 .card{
   background:#fff;
   padding:14px;
@@ -93,51 +98,54 @@ header .text p{
   box-shadow:0 2px 6px rgba(0,0,0,.05);
   margin-bottom:12px;
 }
+
 .row{
   display:flex;
   gap:8px;
   align-items:center;
   margin-bottom:8px;
 }
+
 label{
   flex:1;
   color:var(--muted);
   font-size:13px;
   text-transform:uppercase;
 }
+
 input[type=number], select{
   width:140px;
   padding:8px;
   border-radius:6px;
   border:1px solid #ddd;
 }
+
 .btn{
   display:inline-block;
-  background:var(--accent-dark);
-  color:#222;
+  background:var(--btn);
+  color:#fff;
   padding:8px 12px;
   border-radius:6px;
   font-weight:600;
   cursor:pointer;
   text-align:center;
   text-transform:uppercase;
+  margin-right:6px;
 }
+
+.btn:hover{
+  background:var(--btn-hover);
+}
+
 .out{
-  background:#0f172a;
+  background:#333;
   color:#fff;
   padding:8px;
   border-radius:6px;
   text-align:center;
   font-weight:600;
-  margin-bottom:6px;
+  margin-top:10px;
   text-transform:uppercase;
-}
-.out.small{
-  font-size:13px;
-  padding:6px;
-}
-@media(max-width:900px){
-  .grid{grid-template-columns:1fr;}
 }
 </style>
 </head>
@@ -145,10 +153,7 @@ input[type=number], select{
 <div class="app">
 
 <header>
-  <div class="text">
-    <h1>BULARON CONSTRUCTION ESTIMATE CALCULATOR</h1>
-    <p>CLICK TILE TO SELECT CATEGORY</p>
-  </div>
+  <h1>BULARON CONSTRUCTION ESTIMATE CALCULATOR</h1>
 </header>
 
 <!-- FRONT PAGE TILES -->
@@ -156,7 +161,7 @@ input[type=number], select{
 
 <!-- CATEGORY PAGE -->
 <div id="categoryPage" style="display:none;">
-  <button class="btn" onclick="goHome()" style="margin-bottom:10px;">HOME</button>
+  <button class="btn" onclick="goHome()">HOME</button>
   <div class="subtabs" id="subtabs"></div>
   <div class="card" id="main"></div>
 </div>
@@ -186,18 +191,7 @@ const main=document.getElementById('main');
 categories.forEach(cat=>{
   const tile=document.createElement('div');
   tile.className='tile';
-
-  const label=document.createElement('div');
-  label.style.fontSize='14px';
-  label.style.fontWeight='600';
-  label.style.marginBottom='10px';
-  label.textContent=cat.title;
-  tile.appendChild(label);
-
-  const placeholder=document.createElement('div');
-  placeholder.style.flexGrow='1';
-  tile.appendChild(placeholder);
-
+  tile.textContent=cat.title;
   tile.onclick=()=>openCategory(cat);
   frontPage.appendChild(tile);
 });
@@ -240,27 +234,46 @@ function selectSubtab(catId,subtab){
 function renderFooting(){
   main.innerHTML=`
     <h2>FOOTING</h2>
-    <div class="row"><label>LENGTH (M)</label><input id="fL" value="0" type="number"></div>
-    <div class="row"><label>WIDTH (M)</label><input id="fW" value="0" type="number"></div>
-    <div class="row"><label>THICKNESS (MM)</label><input id="fT" value="0" type="number"></div>
-    <div class="row"><label>QUANTITY</label><input id="fN" value="0" type="number"></div>
+    <div class="row"><label>LENGTH (M)</label><input id="fL" type="number" value="0"></div>
+    <div class="row"><label>WIDTH (M)</label><input id="fW" type="number" value="0"></div>
+    <div class="row"><label>THICKNESS (MM)</label><input id="fT" type="number" value="0"></div>
+    <div class="row"><label>QUANTITY</label><input id="fN" type="number" value="0"></div>
     <button class="btn" onclick="calcFooting()">COMPUTE</button>
+    <button class="btn" onclick="resetFooting()">RESET</button>
     <hr/><div id="fOut"></div>
   `;
 }
+
 function calcFooting(){
-  const L=+fL.value, W=+fW.value, T=+fT.value/1000, n=+fN.value;
-  const vol=L*W*T*n;
-  fOut.innerHTML=`<div class="out">VOLUME: ${vol.toFixed(3)} CU.M</div>`;
+  const L = +document.getElementById('fL').value;
+  const W = +document.getElementById('fW').value;
+  const T = +document.getElementById('fT').value / 1000; // mm to m
+  const N = +document.getElementById('fN').value;
+  
+  if(L<=0 || W<=0 || T<=0 || N<=0){
+    fOut.innerHTML = `<div class="out">PLEASE ENTER VALID NUMBERS</div>`;
+    return;
+  }
+
+  const vol = L * W * T * N;
+  fOut.innerHTML = `<div class="out">VOLUME: ${Math.round(vol)} CU.M</div>`;
 }
 
-// GO HOME FUNCTION
+function resetFooting(){
+  document.getElementById('fL').value = 0;
+  document.getElementById('fW').value = 0;
+  document.getElementById('fT').value = 0;
+  document.getElementById('fN').value = 0;
+  fOut.innerHTML = '';
+}
+
+// GO HOME
 function goHome(){
   categoryPage.style.display='none';
   frontPage.style.display='grid';
 }
 
-// Placeholder for other concreting functions
+// Placeholder for other concreting subtabs
 function renderSlab(){ main.innerHTML='<h2>SLAB INPUTS HERE</h2>'; }
 function renderBeam(){ main.innerHTML='<h2>BEAM INPUTS HERE</h2>'; }
 function renderColumn(){ main.innerHTML='<h2>COLUMN INPUTS HERE</h2>'; }
