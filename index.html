@@ -1,309 +1,181 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>BULARON Construction Estimate Calculator</title>
+<meta charset="UTF-8">
+<title>Footing Calculator</title>
 <style>
-:root{
-  --accent:#f8d800;
-  --bg:#fff5cc;
-  --card:#fff;
-  --muted:#666;
-  --accent-dark:#e6c000;
-  font-family: Inter, system-ui, Arial;
-}
-body{background:#f2f4f8;margin:0;padding:20px;}
-.app{max-width:1100px;margin:0 auto}
-header{background:var(--accent);padding:14px;border-radius:8px;text-align:center;}
-header h1{margin:0;font-size:18px}
-header p{margin:4px 0 0;font-size:12px;color:#333}
-.tabs{display:flex;gap:8px;margin:18px 0;flex-wrap:wrap}
-.tab{background:#fff;padding:8px 12px;border-radius:6px;cursor:pointer;box-shadow:0 1px 2px rgba(0,0,0,.06)}
-.tab.active{background:linear-gradient(180deg,var(--card),#f7f7f7);border:2px solid var(--accent-dark)}
-.grid{display:grid;grid-template-columns:1fr 380px;gap:18px}
-.card{background:#fff;padding:14px;border-radius:8px;box-shadow:0 2px 6px rgba(0,0,0,.05)}
-.sidebar{position:sticky;top:20px;height:fit-content}
-.row{display:flex;gap:8px;align-items:center;margin-bottom:8px}
-label{flex:1;color:var(--muted);font-size:13px}
-input[type=number], select{width:140px;padding:8px;border-radius:6px;border:1px solid #ddd}
-.yellow{background:var(--bg);border:1px solid var(--accent);padding:6px 8px;border-radius:6px}
-.out{background:#0f172a;color:#fff;padding:8px;border-radius:6px;text-align:center;font-weight:600}
-.out.small{font-size:13px;padding:6px}
-h3{margin:8px 0}
-.tile{display:flex;gap:8px;flex-direction:column}
-.btn{display:inline-block;background:var(--accent-dark);color:#111;padding:8px 12px;border-radius:6px;text-decoration:none;font-weight:600;cursor:pointer}
-footer{margin-top:14px;font-size:12px;color:#444}
-.result-list{display:grid;gap:8px}
-.small-muted{font-size:12px;color:#777}
-@media(max-width:900px){.grid{grid-template-columns:1fr}}
+    body {
+        font-family: Arial, sans-serif;
+        background: #f4f4f4;
+        padding: 20px;
+    }
+
+    .container {
+        width: 750px;
+        margin: auto;
+        background: white;
+        padding: 20px;
+        border: 3px solid #222;
+    }
+
+    h1 {
+        text-align: center;
+        background: #ffd000;
+        padding: 10px;
+        margin: 0 0 10px 0;
+        font-size: 20px;
+        border: 2px solid #000;
+    }
+
+    h2 {
+        background: #d4ff54;
+        padding: 8px;
+        margin-top: 10px;
+        font-size: 18px;
+        border: 2px solid #000;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 10px;
+    }
+
+    td {
+        border: 1px solid #000;
+        padding: 6px;
+        font-size: 15px;
+    }
+
+    .label {
+        background: #eee;
+        font-weight: bold;
+    }
+
+    .yellow {
+        background: #fff15a;
+        font-weight: bold;
+    }
+
+    .black {
+        background: #000;
+        color: #fff;
+        font-weight: bold;
+    }
+
+    input {
+        width: 100%;
+        padding: 5px;
+        border: none;
+        font-size: 15px;
+        text-align: center;
+        background: #fff15a;
+        font-weight: bold;
+    }
+
+    .output {
+        text-align: center;
+        font-weight: bold;
+        font-size: 16px;
+    }
+
 </style>
 </head>
-
 <body>
-<div class="app">
-<header>
-  <h1>BULARON Construction Estimate Calculator</h1>
-  <p>Footing • Slab • Beam • Column • Rebar • CHB • Paint • Formworks • Labor</p>
-</header>
 
-<div class="tabs" id="tabs"></div>
+<div class="container">
 
-<div class="grid">
-  <div class="card" id="main"></div>
+<h1>CONSTRUCTION ESTIMATE CALCULATOR<br>(FOOTING – VOLUME OF CONCRETE)</h1>
 
-  <div class="sidebar card">
-    <div class="tile">
-      <h3>Quick Inputs</h3>
-      <div class="row"><label>Concrete Class</label>
-        <select id="mixClass">
-          <option value="1:2:4">Class A 1:2:4</option>
-          <option value="1:1.5:3">1:1.5:3</option>
-        </select>
-      </div>
-      <div class="row"><label>Cement bag volume (cu.m)</label><input id="bagVol" type="number" value="0.035"></div>
-      <div class="row"><label>Cement bag weight (kg)</label><input id="bagKg" type="number" value="40"></div>
-      <div class="row"><label>Allowances (%)</label><input id="wastePct" type="number" value="10"></div>
-      <button class="btn" onclick="downloadProject()">Download HTML</button>
-      <a class="small-muted">Upload as index.html sa GitHub.</a>
-    </div>
+<h2>A. DETERMINING THE VOLUME OF A FOOTING</h2>
 
-    <hr/>
+<table>
 
-    <div class="tile">
-      <h3>Global Outputs</h3>
-      <div id="globalOutputs" class="result-list"></div>
-    </div>
-  </div>
-</div>
+<tr>
+    <td class="label">Enter Length</td>
+    <td class="yellow"><input type="number" id="length" step="any"></td>
+    <td class="label">L (M)</td>
+</tr>
 
-<footer>Made for you. Convert to APK if needed.</footer>
+<tr>
+    <td class="label">Enter Width</td>
+    <td class="yellow"><input type="number" id="width" step="any"></td>
+    <td class="label">W (M)</td>
+</tr>
+
+<tr>
+    <td class="label">Enter Thickness</td>
+    <td class="yellow"><input type="number" id="thickness" step="any"></td>
+    <td class="label">T (M)</td>
+</tr>
+
+<tr>
+    <td class="label">Number of Footing</td>
+    <td class="yellow"><input type="number" id="count" step="any"></td>
+    <td class="label">Units</td>
+</tr>
+
+<tr>
+    <td class="black">TOTAL VOLUME (per footing)</td>
+    <td class="output black" id="vol_per">0.000</td>
+    <td class="black">CU.M.</td>
+</tr>
+
+<tr>
+    <td class="black">TOTAL VOLUME OF CONCRETE</td>
+    <td class="output black" id="vol_total">0.000</td>
+    <td class="black">CU.M.</td>
+</tr>
+
+<tr>
+    <td class="label"># OF CEMENT</td>
+    <td class="output" id="cement">0</td>
+    <td class="label">BAGS</td>
+</tr>
+
+<tr>
+    <td class="label">VOL. OF SAND</td>
+    <td class="output" id="sand">0.000</td>
+    <td class="label">CU.M.</td>
+</tr>
+
+<tr>
+    <td class="label">VOL. OF 3/4" GRAVEL</td>
+    <td class="output" id="gravel">0.000</td>
+    <td class="label">CU.M.</td>
+</tr>
+
+</table>
+
 </div>
 
 <script>
-/* -------------------- TABS -------------------- */
-const tabs = [
-  {id:'footing', title:'Footing'},
-  {id:'slab', title:'Slab'},
-  {id:'beam', title:'Beam'},
-  {id:'column', title:'Column'},
-  {id:'rebar', title:'Rebar'},
-  {id:'chb', title:'CHB Wall'},
-  {id:'paint', title:'Paint'},
-  {id:'form', title:'Formworks'},
-  {id:'labor', title:'Labor'}
-];
+function compute(){
+    let L = parseFloat(document.getElementById("length").value) || 0;
+    let W = parseFloat(document.getElementById("width").value) || 0;
+    let T = parseFloat(document.getElementById("thickness").value) || 0;
+    let N = parseFloat(document.getElementById("count").value) || 0;
 
-const main = document.getElementById('main');
-const globalOutputs = document.getElementById('globalOutputs');
+    let vol_per = L * W * T;
+    let vol_total = vol_per * N;
 
-tabs.forEach(t=>{
-  const el=document.createElement('div');
-  el.className='tab';
-  el.textContent=t.title;
-  el.dataset.id=t.id;
-  el.onclick=()=>selectTab(t.id);
-  document.getElementById('tabs').appendChild(el);
+    // Concrete mix (CHB Class A approximation)
+    let cement = vol_total * 12;     // bags
+    let sand = vol_total * 0.5;      // cu.m.
+    let gravel = vol_total * 1.0;    // cu.m.
+
+    document.getElementById("vol_per").innerHTML = vol_per.toFixed(3);
+    document.getElementById("vol_total").innerHTML = vol_total.toFixed(3);
+
+    document.getElementById("cement").innerHTML = cement.toFixed(0);
+    document.getElementById("sand").innerHTML = sand.toFixed(3);
+    document.getElementById("gravel").innerHTML = gravel.toFixed(3);
+}
+
+document.querySelectorAll("input").forEach(i=>{
+    i.addEventListener("input", compute);
 });
-selectTab('footing');
-
-function selectTab(id){
-  document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('active', x.dataset.id===id));
-  renderTab(id);
-}
-
-function renderTab(id){
-  if(id==='footing') return renderFooting();
-  if(id==='slab') return renderSlab();
-  if(id==='beam') return renderBeam();
-  if(id==='column') return renderColumn();
-  if(id==='rebar') return renderRebar();
-  if(id==='chb') return renderCHB();
-  if(id==='paint') return renderPaint();
-  if(id==='form') return renderForm();
-  if(id==='labor') return renderLabor();
-}
-
-/* -------------------- GLOBAL OUTPUT LIST -------------------- */
-function setGlobal(label,val){
-  const item = document.createElement('div');
-  item.className='out small';
-  item.textContent = `${label}: ${val.toFixed(3)} cu.m`;
-  globalOutputs.appendChild(item);
-}
-
-/* -------------------- FOOTING -------------------- */
-function renderFooting(){
-  main.innerHTML = `
-    <h2>Footing Calculator</h2>
-    <div class="row"><label>Length (m)</label><input id="fL" type="number" value="1"></div>
-    <div class="row"><label>Width (m)</label><input id="fW" type="number" value="0.5"></div>
-    <div class="row"><label>Thickness (mm)</label><input id="fT" type="number" value="200"></div>
-    <div class="row"><label>Quantity</label><input id="fN" type="number" value="1"></div>
-    <button class="btn" onclick="calcFooting()">Compute</button>
-    <hr/>
-    <div id="fOut"></div>
-  `;
-}
-function calcFooting(){
-  const L=+fL.value, W=+fW.value, T=+fT.value/1000, n=+fN.value;
-  const vol = L*W*T*n;
-  fOut.innerHTML = `<div class="out">Volume: ${vol.toFixed(3)} cu.m</div>`;
-  setGlobal("Footing",vol);
-}
-
-/* -------------------- SLAB -------------------- */
-function renderSlab(){
-  main.innerHTML = `
-    <h2>Slab Calculator</h2>
-    <div class="row"><label>Length (m)</label><input id="sL" value="3"></div>
-    <div class="row"><label>Width (m)</label><input id="sW" value="2"></div>
-    <div class="row"><label>Thickness (mm)</label><input id="sT" value="100"></div>
-    <div class="row"><label>Quantity</label><input id="sN" value="1"></div>
-    <button class="btn" onclick="calcSlab()">Compute</button>
-    <hr/>
-    <div id="sOut"></div>
-  `;
-}
-function calcSlab(){
-  const L=+sL.value, W=+sW.value, T=+sT.value/1000, n=+sN.value;
-  const vol=L*W*T*n;
-  sOut.innerHTML=`<div class="out">Slab Volume: ${vol.toFixed(3)} cu.m</div>`;
-  setGlobal("Slab",vol);
-}
-
-/* -------------------- BEAM -------------------- */
-function renderBeam(){
-  main.innerHTML = `
-    <h2>Beam Calculator</h2>
-    <div class="row"><label>Length (m)</label><input id="bL" value="3"></div>
-    <div class="row"><label>Width (mm)</label><input id="bW" value="200"></div>
-    <div class="row"><label>Height (mm)</label><input id="bH" value="300"></div>
-    <div class="row"><label>Quantity</label><input id="bN" value="1"></div>
-    <button class="btn" onclick="calcBeam()">Compute</button>
-    <hr/>
-    <div id="bOut"></div>
-  `;
-}
-function calcBeam(){
-  const L=+bL.value, W=+bW.value/1000, H=+bH.value/1000, n=+bN.value;
-  const vol=L*W*H*n;
-  bOut.innerHTML=`<div class="out">Beam Volume: ${vol.toFixed(3)} cu.m</div>`;
-  setGlobal("Beam",vol);
-}
-
-/* -------------------- COLUMN -------------------- */
-function renderColumn(){
-  main.innerHTML = `
-    <h2>Column Calculator</h2>
-    <div class="row"><label>Height (m)</label><input id="cL" value="2.5"></div>
-    <div class="row"><label>Width (mm)</label><input id="cW" value="300"></div>
-    <div class="row"><label>Depth (mm)</label><input id="cD" value="300"></div>
-    <div class="row"><label>Quantity</label><input id="cN" value="4"></div>
-    <button class="btn" onclick="calcColumn()">Compute</button>
-    <hr/>
-    <div id="cOut"></div>
-  `;
-}
-function calcColumn(){
-  const L=+cL.value, W=+cW.value/1000, D=+cD.value/1000, n=+cN.value;
-  const vol=L*W*D*n;
-  cOut.innerHTML=`<div class="out">Column Volume: ${vol.toFixed(3)} cu.m</div>`;
-  setGlobal("Column",vol);
-}
-
-/* -------------------- REBAR -------------------- */
-function renderRebar(){
-  main.innerHTML = `
-    <h2>Rebar Estimator</h2>
-    <div class="row"><label>Bar Diameter (mm)</label><input id="rDia" value="10"></div>
-    <div class="row"><label>Length (m)</label><input id="rLen" value="6"></div>
-    <div class="row"><label>Quantity</label><input id="rQty" value="10"></div>
-    <button class="btn" onclick="calcRebar()">Compute</button>
-    <hr/>
-    <div id="rOut"></div>
-  `;
-}
-function calcRebar(){
-  const d=+rDia.value/1000;
-  const area = 3.1416*(d/2)**2;
-  const weight = area*7850 * (+rLen.value) * (+rQty.value);
-  rOut.innerHTML = `<div class="out">Weight: ${weight.toFixed(2)} kg</div>`;
-}
-
-/* -------------------- CHB -------------------- */
-function renderCHB(){
-  main.innerHTML = `
-    <h2>CHB Wall Calculator</h2>
-    <div class="row"><label>Length (m)</label><input id="chL" value="10"></div>
-    <div class="row"><label>Height (m)</label><input id="chH" value="2.4"></div>
-    <button class="btn" onclick="calcCHB()">Compute</button>
-    <hr/>
-    <div id="chOut"></div>
-  `;
-}
-function calcCHB(){
-  const area=+chL.value * +chH.value;
-  const pcs = area * 12.5;
-  chOut.innerHTML = `<div class="out">${pcs.toFixed(0)} pcs CHB</div>`;
-}
-
-/* -------------------- PAINT -------------------- */
-function renderPaint(){
-  main.innerHTML = `
-    <h2>Paint Calculator</h2>
-    <div class="row"><label>Area (sq.m)</label><input id="pA" value="20"></div>
-    <div class="row"><label>Covers (sq.m/L)</label><input id="pC" value="10"></div>
-    <button class="btn" onclick="calcPaint()">Compute</button>
-    <hr/>
-    <div id="pOut"></div>
-  `;
-}
-function calcPaint(){
-  const L = +pA.value / +pC.value;
-  pOut.innerHTML = `<div class="out">${L.toFixed(2)} liters</div>`;
-}
-
-/* -------------------- FORMWORKS -------------------- */
-function renderForm(){
-  main.innerHTML = `
-    <h2>Formworks Calculator</h2>
-    <div class="row"><label>Area (sq.m)</label><input id="fA" value="10"></div>
-    <button class="btn" onclick="calcForm()">Compute</button>
-    <hr/>
-    <div id="f2Out"></div>
-  `;
-}
-function calcForm(){
-  const area = +fA.value;
-  f2Out.innerHTML = `<div class="out">${area.toFixed(2)} sq.m plywood</div>`;
-}
-
-/* -------------------- LABOR -------------------- */
-function renderLabor(){
-  main.innerHTML = `
-    <h2>Labor Estimate</h2>
-    <div class="row"><label>Workers</label><input id="lW" value="4"></div>
-    <div class="row"><label>Days</label><input id="lD" value="5"></div>
-    <div class="row"><label>Rate per day</label><input id="lR" value="600"></div>
-    <button class="btn" onclick="calcLabor()">Compute</button>
-    <hr/>
-    <div id="lOut"></div>
-  `;
-}
-function calcLabor(){
-  const cost = +lW.value * +lD.value * +lR.value;
-  lOut.innerHTML = `<div class="out">₱ ${cost.toLocaleString()}</div>`;
-}
-
-/* -------------------- DOWNLOAD -------------------- */
-function downloadProject(){
-  const blob = new Blob([document.documentElement.outerHTML],{type:"text/html"});
-  const a=document.createElement("a");
-  a.href=URL.createObjectURL(blob);
-  a.download="bularon-calculator.html";
-  a.click();
-}
 </script>
+
 </body>
 </html>
