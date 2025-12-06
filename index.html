@@ -6,7 +6,7 @@
 <title>BULARON CONSTRUCTION ESTIMATE CALCULATOR</title>
 <style>
 :root{
-  --accent:#ffcc00;       /* Construction yellow */
+  --accent:#ffcc00;       
   --accent-dark:#e6b800;
   --bg:#f2f2f2;           
   --card:#fff;
@@ -230,13 +230,13 @@ function selectSubtab(catId,subtab){
   }
 }
 
-// FOOTING
+// FOOTING (ALL METERS)
 function renderFooting(){
   main.innerHTML=`
     <h2>FOOTING</h2>
     <div class="row"><label>LENGTH (M)</label><input id="fL" type="number" value="0"></div>
     <div class="row"><label>WIDTH (M)</label><input id="fW" type="number" value="0"></div>
-    <div class="row"><label>THICKNESS (MM)</label><input id="fT" type="number" value="0"></div>
+    <div class="row"><label>THICKNESS (M)</label><input id="fT" type="number" value="0"></div>
     <div class="row"><label>QUANTITY</label><input id="fN" type="number" value="0"></div>
     <button class="btn" onclick="calcFooting()">COMPUTE</button>
     <button class="btn" onclick="resetFooting()">RESET</button>
@@ -248,7 +248,7 @@ function calcFooting(){
   const fOut = document.getElementById('fOut');
   const L = +document.getElementById('fL').value;
   const W = +document.getElementById('fW').value;
-  const T = +document.getElementById('fT').value / 1000; // mm to meters
+  const T = +document.getElementById('fT').value; // meters
   const N = +document.getElementById('fN').value;
 
   if(L<=0 || W<=0 || T<=0 || N<=0){
@@ -258,7 +258,7 @@ function calcFooting(){
 
   const vol = L * W * T * N;
 
-  // Display at least 3 decimals if volume < 1, otherwise round
+  // Display at least 3 decimals if volume < 1, else round
   const displayVol = vol < 1 ? vol.toFixed(3) : Math.round(vol);
 
   fOut.innerHTML = `<div class="out">VOLUME: ${displayVol} CU.M</div>`;
