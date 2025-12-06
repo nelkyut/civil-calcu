@@ -32,13 +32,6 @@ header{
   justify-content:center;
   gap:14px;
 }
-header img{
-  height:55px;
-  width:55px;
-  object-fit:cover;
-  border-radius:8px;
-  border:2px solid #fff;
-}
 header .text h1{
   margin:0;
   font-size:20px;
@@ -58,17 +51,22 @@ header .text p{
 }
 .tile{
   background:#fff;
-  padding:20px;
   border-radius:10px;
   text-align:center;
-  font-weight:600;
-  font-size:14px;
   cursor:pointer;
   box-shadow:0 2px 6px rgba(0,0,0,0.1);
-  text-transform:uppercase;
   transition:0.2s;
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-start;
+  align-items:center;
+  aspect-ratio:1/1; /* always square */
+  padding:10px;
 }
-.tile:hover{transform:scale(1.05);box-shadow:0 4px 10px rgba(0,0,0,0.2);}
+.tile:hover{
+  transform:scale(1.05);
+  box-shadow:0 4px 10px rgba(0,0,0,0.2);
+}
 .subtabs{
   display:flex;
   gap:8px;
@@ -93,6 +91,7 @@ header .text p{
   padding:14px;
   border-radius:10px;
   box-shadow:0 2px 6px rgba(0,0,0,.05);
+  margin-bottom:12px;
 }
 .row{
   display:flex;
@@ -155,19 +154,20 @@ input[type=number], select{
 <div class="app">
 
 <header>
-  <img src="your-image.jpg" alt="Logo">
   <div class="text">
     <h1>BULARON CONSTRUCTION ESTIMATE CALCULATOR</h1>
     <p>CLICK TILE TO SELECT CATEGORY</p>
   </div>
 </header>
 
+<!-- FRONT PAGE TILES -->
 <div id="frontPage" class="tiles"></div>
 
+<!-- CATEGORY PAGE -->
 <div id="categoryPage" style="display:none;">
   <div class="subtabs" id="subtabs"></div>
   <div class="card" id="main"></div>
-  <div class="card" style="margin-top:12px;">
+  <div class="card">
     <h3>GLOBAL OUTPUTS</h3>
     <div id="globalOutputs" class="result-list"></div>
     <button class="btn" onclick="downloadProject()">DOWNLOAD HTML</button>
@@ -197,20 +197,33 @@ const categoryPage=document.getElementById('categoryPage');
 const main=document.getElementById('main');
 const subtabsEl=document.getElementById('subtabs');
 const globalOutputs=document.getElementById('globalOutputs');
+let globalData = {};
 
 // CREATE FRONT PAGE TILES
-categories.forEach(c=>{
-  const t=document.createElement('div');
-  t.className='tile';
-  t.textContent=c.title;
-  t.onclick=()=>openCategory(c);
-  frontPage.appendChild(t);
+categories.forEach(cat=>{
+  const tile=document.createElement('div');
+  tile.className='tile';
+
+  const label=document.createElement('div');
+  label.style.fontSize='14px';
+  label.style.fontWeight='600';
+  label.style.marginBottom='10px';
+  label.textContent=cat.title;
+  tile.appendChild(label);
+
+  const placeholder=document.createElement('div');
+  placeholder.style.flexGrow='1';
+  tile.appendChild(placeholder);
+
+  tile.onclick=()=>openCategory(cat);
+  frontPage.appendChild(tile);
 });
 
 function openCategory(cat){
   frontPage.style.display='none';
   categoryPage.style.display='block';
   globalOutputs.innerHTML='';
+
   if(cat.subtabs.length>0){
     subtabsEl.innerHTML='';
     cat.subtabs.forEach((s,i)=>{
@@ -240,14 +253,14 @@ function selectSubtab(catId,subtab){
   }
 }
 
-// -------------------- FOOTING --------------------
+// FOOTING
 function renderFooting(){
   main.innerHTML=`
     <h2>FOOTING</h2>
-    <div class="row"><label>LENGTH (M)</label><input id="fL" value="0"></div>
-    <div class="row"><label>WIDTH (M)</label><input id="fW" value="0"></div>
-    <div class="row"><label>THICKNESS (MM)</label><input id="fT" value="0"></div>
-    <div class="row"><label>QUANTITY</label><input id="fN" value="0"></div>
+    <div class="row"><label>LENGTH (M)</label><input id="fL" value="0" type="number"></div>
+    <div class="row"><label>WIDTH (M)</label><input id="fW" value="0" type="number"></div>
+    <div class="row"><label>THICKNESS (MM)</label><input id="fT" value="0" type="number"></div>
+    <div class="row"><label>QUANTITY</label><input id="fN" value="0" type="number"></div>
     <button class="btn" onclick="calcFooting()">COMPUTE</button>
     <hr/><div id="fOut"></div>
   `;
@@ -259,73 +272,35 @@ function calcFooting(){
   setGlobal("FOOTING",vol);
 }
 
-// -------------------- SLAB --------------------
-function renderSlab(){
-  main.innerHTML=`
-    <h2>SLAB</h2>
-    <div class="row"><label>LENGTH (M)</label><input id="sL" value="0"></div>
-    <div class="row"><label>WIDTH (M)</label><input id="sW" value="0"></div>
-    <div class="row"><label>THICKNESS (MM)</label><input id="sT" value="0"></div>
-    <div class="row"><label>QUANTITY</label><input id="sN" value="0"></div>
-    <button class="btn" onclick="calcSlab()">COMPUTE</button>
-    <hr/><div id="sOut"></div>
-  `;
+// GLOBAL DATA HANDLER
+function setGlobal(name,value){
+  globalData[name]=value;
+  renderGlobalOutputs();
 }
-function calcSlab(){
-  const L=+sL.value, W=+sW.value, T=+sT.value/1000, n=+sN.value;
-  const vol=L*W*T*n;
-  sOut.innerHTML=`<div class="out">VOLUME: ${vol.toFixed(3)} CU.M</div>`;
-  setGlobal("SLAB",vol);
+function renderGlobalOutputs(){
+  globalOutputs.innerHTML='';
+  for(const k in globalData){
+    const div=document.createElement('div');
+    div.className='out small';
+    div.textContent=`${k}: ${globalData[k].toFixed(3)}`;
+    globalOutputs.appendChild(div);
+  }
 }
 
-// -------------------- BEAM --------------------
-function renderBeam(){
-  main.innerHTML=`
-    <h2>BEAM</h2>
-    <div class="row"><label>LENGTH (M)</label><input id="bL" value="0"></div>
-    <div class="row"><label>WIDTH (MM)</label><input id="bW" value="0"></div>
-    <div class="row"><label>HEIGHT (MM)</label><input id="bH" value="0"></div>
-    <div class="row"><label>QUANTITY</label><input id="bN" value="0"></div>
-    <button class="btn" onclick="calcBeam()">COMPUTE</button>
-    <hr/><div id="bOut"></div>
-  `;
-}
-function calcBeam(){
-  const L=+bL.value, W=+bW.value/1000, H=+bH.value/1000, n=+bN.value;
-  const vol=L*W*H*n;
-  bOut.innerHTML=`<div class="out">VOLUME: ${vol.toFixed(3)} CU.M</div>`;
-  setGlobal("BEAM",vol);
+// DOWNLOAD FUNCTION
+function downloadProject(){
+  const blob = new Blob([document.documentElement.outerHTML], {type: 'text/html'});
+  const link = document.createElement('a');
+  link.href = URL.createObjectURL(blob);
+  link.download = 'index.html';
+  link.click();
 }
 
-// -------------------- COLUMN --------------------
-function renderColumn(){
-  main.innerHTML=`
-    <h2>COLUMN</h2>
-    <div class="row"><label>HEIGHT (M)</label><input id="cL" value="0"></div>
-    <div class="row"><label>WIDTH (MM)</label><input id="cW" value="0"></div>
-    <div class="row"><label>DEPTH (MM)</label><input id="cD" value="0"></div>
-    <div class="row"><label>QUANTITY</label><input id="cN" value="0"></div>
-    <button class="btn" onclick="calcColumn()">COMPUTE</button>
-    <hr/><div id="cOut"></div>
-  `;
-}
-function calcColumn(){
-  const L=+cL.value, W=+cW.value/1000, D=+cD.value/1000, n=+cN.value;
-  const vol=L*W*D*n;
-  cOut.innerHTML=`<div class="out">VOLUME: ${vol.toFixed(3)} CU.M</div>`;
-  setGlobal("COLUMN",vol);
-}
-
-// -------------------- REBAR --------------------
-function renderRebar(){
-  main.innerHTML=`
-    <h2>REBAR</h2>
-    <div class="row"><label>DIAMETER (MM)</label><input id="rDia" value="0"></div>
-    <div class="row"><label>LENGTH (M)</label><input id="rLen" value="0"></div>
-    <div class="row"><label>QUANTITY</label><input id="rQty" value="0"></div>
-    <button class="btn" onclick="calcRebar()">COMPUTE</button>
-    <hr/><div id="rOut"></div>
-  `;
-}
-function calcRebar(){
-  const d=+rDi
+// Placeholder for other concreting functions (SLAB, BEAM, COLUMN, REBAR)
+function renderSlab(){ main.innerHTML='<h2>SLAB INPUTS HERE</h2>'; }
+function renderBeam(){ main.innerHTML='<h2>BEAM INPUTS HERE</h2>'; }
+function renderColumn(){ main.innerHTML='<h2>COLUMN INPUTS HERE</h2>'; }
+function renderRebar(){ main.innerHTML='<h2>REBAR INPUTS HERE</h2>'; }
+</script>
+</body>
+</html>
