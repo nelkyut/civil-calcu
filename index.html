@@ -8,7 +8,7 @@
 :root{
   --accent:#ffcc00;       /* Construction yellow */
   --accent-dark:#e6b800;
-  --bg:#f2f2f2;           /* Light gray background */
+  --bg:#f2f2f2;           
   --card:#fff;
   --muted:#555;
   --btn:#ff9900;
@@ -245,19 +245,23 @@ function renderFooting(){
 }
 
 function calcFooting(){
-  const fOut = document.getElementById('fOut'); // <-- important
+  const fOut = document.getElementById('fOut');
   const L = +document.getElementById('fL').value;
   const W = +document.getElementById('fW').value;
-  const T = +document.getElementById('fT').value / 1000; // mm to m
+  const T = +document.getElementById('fT').value / 1000; // mm to meters
   const N = +document.getElementById('fN').value;
-  
+
   if(L<=0 || W<=0 || T<=0 || N<=0){
     fOut.innerHTML = `<div class="out">PLEASE ENTER VALID NUMBERS</div>`;
     return;
   }
 
   const vol = L * W * T * N;
-  fOut.innerHTML = `<div class="out">VOLUME: ${Math.round(vol)} CU.M</div>`;
+
+  // Display at least 3 decimals if volume < 1, otherwise round
+  const displayVol = vol < 1 ? vol.toFixed(3) : Math.round(vol);
+
+  fOut.innerHTML = `<div class="out">VOLUME: ${displayVol} CU.M</div>`;
 }
 
 function resetFooting(){
