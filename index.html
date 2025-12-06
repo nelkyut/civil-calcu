@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Civil Construction Calculator</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        padding: 20px;
+        background: #f2f2f2;
+    }
+    h2 {
+        margin-top: 40px;
+        color: #333;
+    }
+    .box {
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    input {
+        width: 100%;
+        padding: 10px;
+        margin: 5px 0 10px 0;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+    button {
+        width: 100%;
+        padding: 12px;
+        background: #007bff;
+        border: none;
+        color: white;
+        font-size: 16px;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-top: 10px;
+    }
+    button:hover {
+        background: #0056b3;
+    }
+    .result {
+        margin-top: 10px;
+        font-weight: bold;
+        color: #111;
+    }
+</style>
+</head>
+<body>
+
+<h1>Civil Construction Calculator</h1>
+
+<!-- Concrete Volume -->
+<div class="box">
+    <h2>Concrete Volume (m³)</h2>
+    <input type="number" id="len" placeholder="Length (m)">
+    <input type="number" id="wid" placeholder="Width (m)">
+    <input type="number" id="ht" placeholder="Height (m)">
+    <button onclick="calcVolume()">Calculate Volume</button>
+    <div class="result" id="volRes"></div>
+</div>
+
+<!-- Steel Bar Weight -->
+<div class="box">
+    <h2>Steel Bar Weight (kg)</h2>
+    <input type="number" id="dia" placeholder="Diameter (mm)">
+    <input type="number" id="lengthBar" placeholder="Length (m)">
+    <button onclick="calcSteel()">Calculate Weight</button>
+    <div class="result" id="steelRes"></div>
+</div>
+
+<!-- Slab Area -->
+<div class="box">
+    <h2>Slab Area (m²)</h2>
+    <input type="number" id="slabL" placeholder="Length (m)">
+    <input type="number" id="slabW" placeholder="Width (m)">
+    <button onclick="calcSlab()">Calculate Slab Area</button>
+    <div class="result" id="slabRes"></div>
+</div>
+
+<!-- Footing Volume -->
+<div class="box">
+    <h2>Footing Volume (m³)</h2>
+    <input type="number" id="footL" placeholder="Footing Length (m)">
+    <input type="number" id="footW" placeholder="Footing Width (m)">
+    <input type="number" id="footH" placeholder="Footing Height (m)">
+    <button onclick="calcFooting()">Calculate Footing Volume</button>
+    <div class="result" id="footRes"></div>
+</div>
+
+<!-- Cement Sand Gravel Estimator -->
+<div class="box">
+    <h2>Cement, Sand, Gravel Estimator</h2>
+    <input type="number" id="mixVol" placeholder="Concrete Volume (m³)">
+    <button onclick="calcCSG()">Calculate Materials</button>
+    <div class="result" id="csgRes"></div>
+</div>
+
+<script>
+function calcVolume() {
+    let L = parseFloat(document.getElementById("len").value);
+    let W = parseFloat(document.getElementById("wid").value);
+    let H = parseFloat(document.getElementById("ht").value);
+    let vol = L * W * H;
+    document.getElementById("volRes").innerHTML = "Volume: " + vol.toFixed(3) + " m³";
+}
+
+function calcSteel() {
+    let d = parseFloat(document.getElementById("dia").value);
+    let L = parseFloat(document.getElementById("lengthBar").value);
+    let weight = 0.00617 * d * d * L; 
+    document.getElementById("steelRes").innerHTML = "Weight: " + weight.toFixed(2) + " kg";
+}
+
+function calcSlab() {
+    let L = parseFloat(document.getElementById("slabL").value);
+    let W = parseFloat(document.getElementById("slabW").value);
+    let area = L * W;
+    document.getElementById("slabRes").innerHTML = "Slab Area: " + area.toFixed(2) + " m²";
+}
+
+function calcFooting() {
+    let L = parseFloat(document.getElementById("footL").value);
+    let W = parseFloat(document.getElementById("footW").value);
+    let H = parseFloat(document.getElementById("footH").value);
+    let vol = L * W * H;
+    document.getElementById("footRes").innerHTML = "Footing Volume: " + vol.toFixed(3) + " m³";
+}
+
+function calcCSG() {
+    let V = parseFloat(document.getElementById("mixVol").value);
+
+    let cement = V * 6;        // 6 bags per m3 approx
+    let sand = V * 0.5;        // 0.5 m3
+    let gravel = V * 0.8;      // 0.8 m3
+
+    document.getElementById("csgRes").innerHTML =
+        "Cement: " + cement.toFixed(1) + " bags<br>" +
+        "Sand: " + sand.toFixed(2) + " m³<br>" +
+        "Gravel: " + gravel.toFixed(2) + " m³";
+}
+</script>
+
+</body>
+</html>
