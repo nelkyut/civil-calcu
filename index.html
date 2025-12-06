@@ -60,7 +60,7 @@ header .text p{
   flex-direction:column;
   justify-content:flex-start;
   align-items:center;
-  aspect-ratio:1/1; /* always square */
+  aspect-ratio:1/1;
   padding:10px;
 }
 .tile:hover{
@@ -165,6 +165,7 @@ input[type=number], select{
 
 <!-- CATEGORY PAGE -->
 <div id="categoryPage" style="display:none;">
+  <button class="btn" onclick="goHome()" style="margin-bottom:10px;">HOME</button>
   <div class="subtabs" id="subtabs"></div>
   <div class="card" id="main"></div>
   <div class="card">
@@ -296,7 +297,13 @@ function downloadProject(){
   link.click();
 }
 
-// Placeholder for other concreting functions (SLAB, BEAM, COLUMN, REBAR)
+// GO HOME FUNCTION
+function goHome(){
+  categoryPage.style.display='none';
+  frontPage.style.display='grid';
+}
+
+// Placeholder for other concreting functions
 function renderSlab(){ main.innerHTML='<h2>SLAB INPUTS HERE</h2>'; }
 function renderBeam(){ main.innerHTML='<h2>BEAM INPUTS HERE</h2>'; }
 function renderColumn(){ main.innerHTML='<h2>COLUMN INPUTS HERE</h2>'; }
