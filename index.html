@@ -2,230 +2,234 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Civil Construction Calculator</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Civil Calculator</title>
 <style>
-    body { font-family: Arial, sans-serif; padding: 20px; background: #f2f2f2; }
-    h1 { text-align: center; margin-bottom: 30px; }
-    .box {
-        background: white; padding: 20px; border-radius: 10px;
-        margin-bottom: 25px; box-shadow: 0 0 10px rgba(0,0,0,0.15);
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f5f5f5;
+        padding: 20px;
     }
-    input, select {
-        width: 100%; padding: 10px; margin-top: 7px;
-        border: 1px solid #bbb; border-radius: 5px;
+    h1 {
+        text-align: center;
+        color: #333;
+    }
+    .section {
+        background-color: #fff;
+        padding: 15px;
+        margin-bottom: 20px;
+        border-radius: 10px;
+        box-shadow: 0px 2px 5px rgba(0,0,0,0.2);
+    }
+    label {
+        display: block;
+        margin: 8px 0 4px;
+    }
+    input[type="number"] {
+        width: 100%;
+        padding: 8px;
+        margin-bottom: 10px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
     }
     button {
-        width: 100%; padding: 12px; margin-top: 10px;
-        background: #007bff; border: none; color: white;
-        font-size: 16px; border-radius: 5px; cursor: pointer;
+        padding: 10px 15px;
+        border: none;
+        border-radius: 5px;
+        background-color: #007bff;
+        color: #fff;
+        cursor: pointer;
     }
-    .result { margin-top: 12px; font-weight: bold; color: #222; }
+    button:hover {
+        background-color: #0056b3;
+    }
+    .result {
+        margin-top: 10px;
+        font-weight: bold;
+        color: #d9534f;
+    }
 </style>
 </head>
 <body>
 
-<h1>CIVIL ENGINEERING CALCULATOR</h1>
+<h1>Civil Volume Calculator</h1>
 
-<!-- Concrete Volume -->
-<div class="box">
-    <h2>Concrete Volume (m³)</h2>
-    <input id="cvL" type="number" placeholder="Length (m)">
-    <input id="cvW" type="number" placeholder="Width (m)">
-    <input id="cvH" type="number" placeholder="Height (m)">
-    <button onclick="calcConcrete()">Calculate</button>
-    <div class="result" id="cvRes"></div>
+<!-- FOOTING -->
+<div class="section">
+    <h2>Footing</h2>
+    <label>Length (m)</label>
+    <input type="number" id="footingLength" step="0.01">
+    <label>Width (m)</label>
+    <input type="number" id="footingWidth" step="0.01">
+    <label>Thickness (m)</label>
+    <input type="number" id="footingThickness" step="0.01">
+    <label>Quantity</label>
+    <input type="number" id="footingQty" value="1">
+    <button onclick="calcFooting()">Calculate Volume</button>
+    <div class="result" id="footingResult"></div>
 </div>
 
-<!-- Slab Area -->
-<div class="box">
-    <h2>Slab Area (m²)</h2>
-    <input id="slabL" type="number" placeholder="Length (m)">
-    <input id="slabW" type="number" placeholder="Width (m)">
-    <button onclick="calcSlab()">Calculate</button>
-    <div class="result" id="slabRes"></div>
+<!-- WALL FOOTING -->
+<div class="section">
+    <h2>Wall Footing</h2>
+    <label>Length (m)</label>
+    <input type="number" id="wallLength" step="0.01">
+    <label>Width (m)</label>
+    <input type="number" id="wallWidth" step="0.01">
+    <label>Thickness (m)</label>
+    <input type="number" id="wallThickness" step="0.01">
+    <button onclick="calcWallFooting()">Calculate Volume</button>
+    <div class="result" id="wallResult"></div>
 </div>
 
-<!-- Footing Volume -->
-<div class="box">
-    <h2>Footing Volume (m³)</h2>
-    <input id="footL" type="number" placeholder="Footing Length (m)">
-    <input id="footW" type="number" placeholder="Footing Width (m)">
-    <input id="footH" type="number" placeholder="Footing Height (m)">
-    <button onclick="calcFooting()">Calculate</button>
-    <div class="result" id="footRes"></div>
+<!-- FLOOR SLAB -->
+<div class="section">
+    <h2>Floor Slab</h2>
+    <label>Length (m)</label>
+    <input type="number" id="slabLength" step="0.01">
+    <label>Width (m)</label>
+    <input type="number" id="slabWidth" step="0.01">
+    <label>Thickness (m)</label>
+    <input type="number" id="slabThickness" step="0.01">
+    <button onclick="calcFloorSlab()">Calculate Volume</button>
+    <div class="result" id="slabResult"></div>
 </div>
 
-<!-- Beam Volume -->
-<div class="box">
-    <h2>Beam Volume (m³)</h2>
-    <input id="beamL" type="number" placeholder="Beam Length (m)">
-    <input id="beamW" type="number" placeholder="Beam Width (m)">
-    <input id="beamH" type="number" placeholder="Beam Height (m)">
-    <button onclick="calcBeam()">Calculate</button>
-    <div class="result" id="beamRes"></div>
+<!-- FLOOR SLAB BY AREA -->
+<div class="section">
+    <h2>Floor Slab by Area</h2>
+    <label>Area (m²)</label>
+    <input type="number" id="slabArea" step="0.01">
+    <label>Thickness (m)</label>
+    <input type="number" id="slabAreaThickness" step="0.01">
+    <button onclick="calcSlabByArea()">Calculate Volume</button>
+    <div class="result" id="slabAreaResult"></div>
 </div>
 
-<!-- Column Volume -->
-<div class="box">
-    <h2>Column Volume (m³)</h2>
-    <input id="colL" type="number" placeholder="Column Length (m)">
-    <input id="colW" type="number" placeholder="Column Width (m)">
-    <input id="colH" type="number" placeholder="Column Height (m)">
-    <button onclick="calcColumn()">Calculate</button>
-    <div class="result" id="colRes"></div>
+<!-- CONCRETE COLUMN RECTANGULAR -->
+<div class="section">
+    <h2>Concrete Column (Rectangular)</h2>
+    <label>Width (m)</label>
+    <input type="number" id="colRectWidth" step="0.01">
+    <label>Depth (m)</label>
+    <input type="number" id="colRectDepth" step="0.01">
+    <label>Height (m)</label>
+    <input type="number" id="colRectHeight" step="0.01">
+    <label>Quantity</label>
+    <input type="number" id="colRectQty" value="1">
+    <button onclick="calcColRect()">Calculate Volume</button>
+    <div class="result" id="colRectResult"></div>
 </div>
 
-<!-- Steel Bar Weight -->
-<div class="box">
-    <h2>Steel Bar Weight (kg)</h2>
-    <input id="sbDia" type="number" placeholder="Diameter (mm)">
-    <input id="sbLen" type="number" placeholder="Length (m)">
-    <button onclick="calcSteel()">Calculate</button>
-    <div class="result" id="sbRes"></div>
+<!-- CONCRETE COLUMN CIRCULAR -->
+<div class="section">
+    <h2>Concrete Column (Circular)</h2>
+    <label>Diameter (m)</label>
+    <input type="number" id="colCircDiameter" step="0.01">
+    <label>Height (m)</label>
+    <input type="number" id="colCircHeight" step="0.01">
+    <label>Quantity</label>
+    <input type="number" id="colCircQty" value="1">
+    <button onclick="calcColCirc()">Calculate Volume</button>
+    <div class="result" id="colCircResult"></div>
 </div>
 
-<!-- Rebar Spacing -->
-<div class="box">
-    <h2>Rebar Spacing Calculator</h2>
-    <input id="rsLen" type="number" placeholder="Length of Slab/Beam (m)">
-    <input id="rsSpace" type="number" placeholder="Spacing (mm)">
-    <button onclick="calcRebarSpacing()">Calculate</button>
-    <div class="result" id="rsRes"></div>
+<!-- CONCRETE BEAMS -->
+<div class="section">
+    <h2>Concrete Beam</h2>
+    <label>Width (m)</label>
+    <input type="number" id="beamWidth" step="0.01">
+    <label>Depth (m)</label>
+    <input type="number" id="beamDepth" step="0.01">
+    <label>Length (m)</label>
+    <input type="number" id="beamLength" step="0.01">
+    <label>Quantity</label>
+    <input type="number" id="beamQty" value="1">
+    <button onclick="calcBeam()">Calculate Volume</button>
+    <div class="result" id="beamResult"></div>
 </div>
 
-<!-- Cutting List -->
-<div class="box">
-    <h2>Rebar Cutting List</h2>
-    <input id="cutQty" type="number" placeholder="Quantity">
-    <input id="cutLen" type="number" placeholder="Cut Length (m)">
-    <button onclick="calcCutList()">Calculate</button>
-    <div class="result" id="cutRes"></div>
-</div>
-
-<!-- BBS Pattern -->
-<div class="box">
-    <h2>Bar Bending Schedule (Pattern Length)</h2>
-    <input id="pA" type="number" placeholder="A (m)">
-    <input id="pB" type="number" placeholder="B (m)">
-    <input id="pC" type="number" placeholder="C (m)">
-    <button onclick="calcBBS()">Calculate</button>
-    <div class="result" id="bbsRes"></div>
-</div>
-
-<!-- Cement Sand Gravel -->
-<div class="box">
-    <h2>Cement • Sand • Gravel Estimator</h2>
-    <input id="csgVol" type="number" placeholder="Concrete Volume (m³)">
-    <button onclick="calcCSG()">Calculate</button>
-    <div class="result" id="csgRes"></div>
-</div>
-
-<!-- Cement Bags -->
-<div class="box">
-    <h2>Cement Bags Needed</h2>
-    <input id="cemVol" type="number" placeholder="Concrete Volume (m³)">
-    <button onclick="calcCementBags()">Calculate</button>
-    <div class="result" id="cemRes"></div>
-</div>
-
-<!-- kN to kg -->
-<div class="box">
-    <h2>kN → kg Converter</h2>
-    <input id="knVal" type="number" placeholder="Value in kN">
-    <button onclick="knToKg()">Convert</button>
-    <div class="result" id="knRes"></div>
-</div>
-
-<!-- kg to kN -->
-<div class="box">
-    <h2>kg → kN Converter</h2>
-    <input id="kgVal" type="number" placeholder="Value in kg">
-    <button onclick="kgToKn()">Convert</button>
-    <div class="result" id="kgRes"></div>
+<!-- CONCRETE STAIRS -->
+<div class="section">
+    <h2>Concrete Stairs</h2>
+    <label>Tread (m)</label>
+    <input type="number" id="stairTread" step="0.01">
+    <label>Riser (m)</label>
+    <input type="number" id="stairRiser" step="0.01">
+    <label>Width (m)</label>
+    <input type="number" id="stairWidth" step="0.01">
+    <label>Number of Steps</label>
+    <input type="number" id="stairQty" step="1">
+    <button onclick="calcStairs()">Calculate Volume</button>
+    <div class="result" id="stairResult"></div>
 </div>
 
 <script>
-// Concrete
-function calcConcrete(){
-    let L = cvL.value, W = cvW.value, H = cvH.value;
-    cvRes.innerHTML = "Volume: " + (L*W*H).toFixed(3) + " m³";
+function calcFooting() {
+    let L = parseFloat(document.getElementById("footingLength").value);
+    let W = parseFloat(document.getElementById("footingWidth").value);
+    let T = parseFloat(document.getElementById("footingThickness").value);
+    let Q = parseFloat(document.getElementById("footingQty").value);
+    let V = L * W * T * Q;
+    document.getElementById("footingResult").innerText = `Volume = ${V.toFixed(3)} m³`;
 }
 
-// Slab
-function calcSlab(){
-    slabRes.innerHTML = "Area: " + (slabL.value * slabW.value).toFixed(2) + " m²";
+function calcWallFooting() {
+    let L = parseFloat(document.getElementById("wallLength").value);
+    let W = parseFloat(document.getElementById("wallWidth").value);
+    let T = parseFloat(document.getElementById("wallThickness").value);
+    let V = L * W * T;
+    document.getElementById("wallResult").innerText = `Volume = ${V.toFixed(3)} m³`;
 }
 
-// Footing
-function calcFooting(){
-    footRes.innerHTML =
-        "Volume: " + (footL.value * footW.value * footH.value).toFixed(3) + " m³";
+function calcFloorSlab() {
+    let L = parseFloat(document.getElementById("slabLength").value);
+    let W = parseFloat(document.getElementById("slabWidth").value);
+    let T = parseFloat(document.getElementById("slabThickness").value);
+    let V = L * W * T;
+    document.getElementById("slabResult").innerText = `Volume = ${V.toFixed(3)} m³`;
 }
 
-// Beam
-function calcBeam(){
-    beamRes.innerHTML =
-        "Volume: " + (beamL.value * beamW.value * beamH.value).toFixed(3) + " m³";
+function calcSlabByArea() {
+    let A = parseFloat(document.getElementById("slabArea").value);
+    let T = parseFloat(document.getElementById("slabAreaThickness").value);
+    let V = A * T;
+    document.getElementById("slabAreaResult").innerText = `Volume = ${V.toFixed(3)} m³`;
 }
 
-// Column
-function calcColumn(){
-    colRes.innerHTML =
-        "Volume: " + (colL.value * colW.value * colH.value).toFixed(3) + " m³";
+function calcColRect() {
+    let W = parseFloat(document.getElementById("colRectWidth").value);
+    let D = parseFloat(document.getElementById("colRectDepth").value);
+    let H = parseFloat(document.getElementById("colRectHeight").value);
+    let Q = parseFloat(document.getElementById("colRectQty").value);
+    let V = W * D * H * Q;
+    document.getElementById("colRectResult").innerText = `Volume = ${V.toFixed(3)} m³`;
 }
 
-// Steel Weight
-function calcSteel(){
-    let w = 0.00617 * sbDia.value * sbDia.value * sbLen.value;
-    sbRes.innerHTML = "Weight: " + w.toFixed(2) + " kg";
+function calcColCirc() {
+    let D = parseFloat(document.getElementById("colCircDiameter").value);
+    let H = parseFloat(document.getElementById("colCircHeight").value);
+    let Q = parseFloat(document.getElementById("colCircQty").value);
+    let V = Math.PI * Math.pow(D/2, 2) * H * Q;
+    document.getElementById("colCircResult").innerText = `Volume = ${V.toFixed(3)} m³`;
 }
 
-// Rebar Spacing
-function calcRebarSpacing(){
-    let lengthM = rsLen.value;
-    let spacingM = rsSpace.value / 1000;
-    let qty = Math.ceil(lengthM / spacingM) + 1;
-    rsRes.innerHTML = "Required Bars: " + qty + " pcs";
+function calcBeam() {
+    let W = parseFloat(document.getElementById("beamWidth").value);
+    let D = parseFloat(document.getElementById("beamDepth").value);
+    let L = parseFloat(document.getElementById("beamLength").value);
+    let Q = parseFloat(document.getElementById("beamQty").value);
+    let V = W * D * L * Q;
+    document.getElementById("beamResult").innerText = `Volume = ${V.toFixed(3)} m³`;
 }
 
-// Cutting List
-function calcCutList(){
-    let total = cutQty.value * cutLen.value;
-    cutRes.innerHTML = "Total Length: " + total + " m";
-}
-
-// BBS Pattern
-function calcBBS(){
-    let total = (+pA.value) + (+pB.value) + (+pC.value);
-    bbsRes.innerHTML = "Total Bar Length: " + total.toFixed(2) + " m";
-}
-
-// CSG Estimator
-function calcCSG(){
-    let V = csgVol.value;
-    let cement = V * 6;
-    let sand = V * 0.5;
-    let gravel = V * 0.8;
-    csgRes.innerHTML =
-        "Cement: " + cement.toFixed(1) + " bags<br>" +
-        "Sand: " + sand.toFixed(2) + " m³<br>" +
-        "Gravel: " + gravel.toFixed(2) + " m³";
-}
-
-// Cement Bags
-function calcCementBags(){
-    cemRes.innerHTML = 
-        "Cement Needed: " + (cemVol.value * 6).toFixed(1) + " bags";
-}
-
-// kN to kg
-function knToKg(){
-    knRes.innerHTML = (knVal.value * 101.9716).toFixed(2) + " kg";
-}
-
-// kg to kN
-function kgToKn(){
-    kgRes.innerHTML = (kgVal.value / 101.9716).toFixed(4) + " kN";
+function calcStairs() {
+    let T = parseFloat(document.getElementById("stairTread").value);
+    let R = parseFloat(document.getElementById("stairRiser").value);
+    let W = parseFloat(document.getElementById("stairWidth").value);
+    let N = parseFloat(document.getElementById("stairQty").value);
+    let V = T * R * W * N;
+    document.getElementById("stairResult").innerText = `Volume = ${V.toFixed(3)} m³`;
 }
 </script>
 
