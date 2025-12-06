@@ -245,6 +245,7 @@ function renderFooting(){
 }
 
 function calcFooting(){
+  const fOut = document.getElementById('fOut'); // <-- important
   const L = +document.getElementById('fL').value;
   const W = +document.getElementById('fW').value;
   const T = +document.getElementById('fT').value / 1000; // mm to m
@@ -260,6 +261,7 @@ function calcFooting(){
 }
 
 function resetFooting(){
+  const fOut = document.getElementById('fOut');
   document.getElementById('fL').value = 0;
   document.getElementById('fW').value = 0;
   document.getElementById('fT').value = 0;
