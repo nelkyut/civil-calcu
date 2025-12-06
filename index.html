@@ -147,6 +147,10 @@ input[type=number], select{
   margin-top:10px;
   text-transform:uppercase;
 }
+.out.small{
+  font-size:13px;
+  padding:6px;
+}
 </style>
 </head>
 <body>
@@ -230,7 +234,7 @@ function selectSubtab(catId,subtab){
   }
 }
 
-// FOOTING (ALL METERS)
+// FOOTING (ALL METERS + MATERIALS ESTIMATE)
 function renderFooting(){
   main.innerHTML=`
     <h2>FOOTING</h2>
@@ -258,10 +262,20 @@ function calcFooting(){
 
   const vol = L * W * T * N;
 
-  // Display at least 3 decimals if volume < 1, else round
   const displayVol = vol < 1 ? vol.toFixed(3) : Math.round(vol);
 
-  fOut.innerHTML = `<div class="out">VOLUME: ${displayVol} CU.M</div>`;
+  // MATERIALS ESTIMATE (1:2:4 mix)
+  const totalVolume = vol;
+  const cementBags = Math.ceil(totalVolume * 7);        // approx 7 bags per cu.m
+  const sandVol = (totalVolume * 2/7).toFixed(3);       // cu.m
+  const gravelVol = (totalVolume * 4/7).toFixed(3);     // cu.m
+
+  fOut.innerHTML = `
+    <div class="out">VOLUME: ${displayVol} CU.M</div>
+    <div class="out small">CEMENT BAGS: ${cementBags} BAGS</div>
+    <div class="out small">SAND: ${sandVol} CU.M</div>
+    <div class="out small">GRAVEL 3/4": ${gravelVol} CU.M</div>
+  `;
 }
 
 function resetFooting(){
