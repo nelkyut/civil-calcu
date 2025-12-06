@@ -4,21 +4,25 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>CONSTRUCTION ESTIMATE CALCULATOR</title>
+
 <style>
 :root{
   --accent:#ffcc00;       
   --accent-dark:#e6b800;
-  --bg:#f2f2f2;           
-  --card:#fff;
-  --muted:#555;
+  --bg:#f2f2f2;
+  --card:#ffffffcc;
+  --muted:#333;
   --btn:#ff9900;
   --btn-hover:#e68a00;
-  --text:#222;
-  font-family: 'Arial', sans-serif;
+  --text:#111;
+  font-family:'Arial',sans-serif;
 }
 
 body{
-  background:var(--bg);
+  background:url('wall.png');
+  background-size:cover;
+  background-position:center;
+  background-attachment:fixed;
   margin:0;
   padding:20px;
 }
@@ -34,11 +38,13 @@ header{
   border-radius:10px;
   text-align:center;
   color:var(--text);
+  box-shadow:0 3px 8px rgba(0,0,0,0.3);
 }
 
 header h1{
   margin:0;
   font-size:22px;
+  font-weight:800;
   text-transform:uppercase;
 }
 
@@ -50,11 +56,11 @@ header h1{
 }
 
 .tile{
-  background:#fff;
+  background:#ffffffdd;
   border-radius:10px;
   text-align:center;
   cursor:pointer;
-  box-shadow:0 2px 6px rgba(0,0,0,0.1);
+  box-shadow:0 2px 6px rgba(0,0,0,0.25);
   transition:0.2s;
   display:flex;
   flex-direction:column;
@@ -62,11 +68,13 @@ header h1{
   align-items:center;
   aspect-ratio:1/1;
   padding:10px;
+  font-weight:700;
 }
 
 .tile:hover{
   transform:scale(1.05);
-  box-shadow:0 4px 10px rgba(0,0,0,0.2);
+  background:#fff;
+  box-shadow:0 4px 10px rgba(0,0,0,0.35);
 }
 
 .subtabs{
@@ -77,25 +85,26 @@ header h1{
 }
 
 .subtab{
-  background:#fff;
+  background:#ffffffcc;
   padding:6px 12px;
   border-radius:6px;
   cursor:pointer;
   font-size:13px;
-  box-shadow:0 1px 2px rgba(0,0,0,.06);
+  box-shadow:0 1px 2px rgba(0,0,0,.2);
   text-transform:uppercase;
+  font-weight:700;
 }
 
 .subtab.active{
-  background:linear-gradient(180deg,var(--card),#f7f7f7);
+  background:linear-gradient(180deg,var(--card),#fff);
   border:2px solid var(--accent-dark);
 }
 
 .card{
-  background:#fff;
+  background:#ffffffdd;
   padding:14px;
   border-radius:10px;
-  box-shadow:0 2px 6px rgba(0,0,0,.05);
+  box-shadow:0 2px 6px rgba(0,0,0,.25);
   margin-bottom:12px;
 }
 
@@ -110,6 +119,7 @@ label{
   flex:1;
   color:var(--muted);
   font-size:13px;
+  font-weight:700;
   text-transform:uppercase;
 }
 
@@ -118,6 +128,7 @@ input[type=number], select{
   padding:8px;
   border-radius:6px;
   border:1px solid #ddd;
+  font-weight:700;
 }
 
 .btn{
@@ -126,7 +137,7 @@ input[type=number], select{
   color:#fff;
   padding:8px 12px;
   border-radius:6px;
-  font-weight:600;
+  font-weight:700;
   cursor:pointer;
   text-align:center;
   text-transform:uppercase;
@@ -138,12 +149,12 @@ input[type=number], select{
 }
 
 .out{
-  background:#333;
+  background:#222;
   color:#fff;
   padding:8px;
   border-radius:6px;
   text-align:center;
-  font-weight:600;
+  font-weight:700;
   margin-top:10px;
   text-transform:uppercase;
 }
@@ -153,6 +164,7 @@ input[type=number], select{
 }
 </style>
 </head>
+
 <body>
 <div class="app">
 
@@ -160,19 +172,18 @@ input[type=number], select{
   <h1>CONSTRUCTION ESTIMATE CALCULATOR</h1>
 </header>
 
-<!-- FRONT PAGE TILES -->
 <div id="frontPage" class="tiles"></div>
 
-<!-- CATEGORY PAGE -->
 <div id="categoryPage" style="display:none;">
   <button class="btn" onclick="goHome()">HOME</button>
   <div class="subtabs" id="subtabs"></div>
   <div class="card" id="main"></div>
 </div>
 
-<footer style="margin-top:14px;font-size:12px;color:#444;text-align:center;text-transform:uppercase;">
+<footer style="margin-top:14px;font-size:12px;color:#fff;text-align:center;text-shadow:1px 1px 3px #000;text-transform:uppercase;">
   NELKYUTIE - CESO, 550ABG @ DECEMBER 2025.
 </footer>
+
 </div>
 
 <script>
@@ -191,7 +202,6 @@ const frontPage=document.getElementById('frontPage');
 const categoryPage=document.getElementById('categoryPage');
 const main=document.getElementById('main');
 
-// FRONT PAGE TILES
 categories.forEach(cat=>{
   const tile=document.createElement('div');
   tile.className='tile';
@@ -199,6 +209,11 @@ categories.forEach(cat=>{
   tile.onclick=()=>openCategory(cat);
   frontPage.appendChild(tile);
 });
+
+function goHome(){
+  categoryPage.style.display='none';
+  frontPage.style.display='grid';
+}
 
 function openCategory(cat){
   frontPage.style.display='none';
@@ -225,6 +240,7 @@ function openCategory(cat){
 // -------------------- CONCRETING SUBTABS --------------------
 function selectSubtab(catId,subtab){
   document.querySelectorAll('.subtab').forEach(x=>x.classList.toggle('active',x.textContent===subtab));
+
   if(catId==='concreting'){
     if(subtab==='FOOTING') renderFooting();
     if(subtab==='WALL FOOTING') renderWallFooting();
@@ -295,8 +311,10 @@ function renderConcreteColumns(){
 
 function selectColumnType(type){
   document.querySelectorAll('#columnSubtabs .subtab')
-          .forEach(x=>x.classList.toggle('active', x.textContent.toLowerCase().includes(type==='rect'?'rect':'circ')));
-  const content = document.getElementById('columnContent');
+    .forEach(x=>x.classList.toggle('active',x.textContent.toLowerCase().includes(type==='rect'?'rect':'circ')));
+
+  const content=document.getElementById('columnContent');
+
   if(type==='rect'){
     content.innerHTML=`
       <div class="row"><label>LENGTH (M)</label><input id="colL" type="number" value="0"></div>
@@ -306,7 +324,7 @@ function selectColumnType(type){
       <button class="btn" onclick="resetRectColumn()">RESET</button>
       <hr/><div id="colOut"></div>
     `;
-  }else{
+  } else {
     content.innerHTML=`
       <div class="row"><label>DIAMETER (M)</label><input id="colD" type="number" value="0"></div>
       <div class="row"><label>HEIGHT (M)</label><input id="colHc" type="number" value="0"></div>
@@ -322,102 +340,75 @@ function renderConcreteStairs(){
   main.innerHTML='<h2>CONCRETE STAIRS INPUTS HERE</h2>';
 }
 
-// ---------------- CALC FUNCTIONS ----------------
+// ---------------- CALCULATIONS ----------------
 function calcFooting(){
-  const fOut=document.getElementById('fOut');
-  const L=+document.getElementById('fL').value;
-  const W=+document.getElementById('fW').value;
-  const T=+document.getElementById('fT').value;
-  const N=+document.getElementById('fN').value;
-  if(L<=0 || W<=0 || T<=0 || N<=0){ fOut.innerHTML='<div class="out">PLEASE ENTER VALID NUMBERS</div>'; return; }
+  const L=+fL.value, W=+fW.value, T=+fT.value, N=+fN.value;
+  if(L<=0||W<=0||T<=0||N<=0) return fOut.innerHTML=`<div class="out">ENTER VALID NUMBERS</div>`;
   const vol=L*W*T*N;
-  const displayVol=vol<1?vol.toFixed(3):Math.round(vol);
-  const cementBags=Math.ceil(vol*9);
-  const sandVol=(vol*0.5).toFixed(2);
-  const gravelVol=(vol*1).toFixed(2);
-  fOut.innerHTML=`<div class="out">VOLUME: ${displayVol} CU.M</div>
-  <div class="out small">CEMENT BAGS: ${cementBags} BAGS</div>
-  <div class="out small">SAND: ${sandVol} CU.M</div>
-  <div class="out small">GRAVEL 3/4": ${gravelVol} CU.M</div>`;
+  showFooting(vol);
 }
-function resetFooting(){ document.getElementById('fL').value=0; document.getElementById('fW').value=0; document.getElementById('fT').value=0; document.getElementById('fN').value=0; document.getElementById('fOut').innerHTML=''; }
+function showFooting(vol){
+  const cement=Math.ceil(vol*9);
+  fOut.innerHTML=`
+    <div class="out">VOLUME: ${vol.toFixed(3)} CU.M</div>
+    <div class="out small">CEMENT: ${cement} BAGS</div>
+    <div class="out small">SAND: ${(vol*0.5).toFixed(2)} CU.M</div>
+    <div class="out small">GRAVEL: ${(vol*1).toFixed(2)} CU.M</div>`;
+}
+function resetFooting(){ fL.value=fW.value=fT.value=fN.value=0; fOut.innerHTML=''; }
 
 function calcWallFooting(){
-  const L=+document.getElementById('wfL').value;
-  const H=+document.getElementById('wfH').value;
-  const T=+document.getElementById('wfT').value;
-  const N=+document.getElementById('wfN').value;
-  const wfOut=document.getElementById('wfOut');
-  if(L<=0 || H<=0 || T<=0 || N<=0){ wfOut.innerHTML='<div class="out">PLEASE ENTER VALID NUMBERS</div>'; return; }
+  const L=+wfL.value, H=+wfH.value, T=+wfT.value, N=+wfN.value;
+  if(L<=0||H<=0||T<=0||N<=0) return wfOut.innerHTML=`<div class="out">ENTER VALID NUMBERS</div>`;
   const vol=L*H*T*N;
-  const displayVol=vol<1?vol.toFixed(3):Math.round(vol);
-  const cementBags=Math.ceil(vol*9);
-  const sandVol=(vol*0.5).toFixed(2);
-  const gravelVol=(vol*1).toFixed(2);
-  wfOut.innerHTML=`<div class="out">VOLUME: ${displayVol} CU.M</div>
-  <div class="out small">CEMENT BAGS: ${cementBags} BAGS</div>
-  <div class="out small">SAND: ${sandVol} CU.M</div>
-  <div class="out small">GRAVEL 3/4": ${gravelVol} CU.M</div>`;
+  showWallFooting(vol);
 }
-function resetWallFooting(){ document.getElementById('wfL').value=0; document.getElementById('wfH').value=0; document.getElementById('wfT').value=0; document.getElementById('wfN').value=0; document.getElementById('wfOut').innerHTML=''; }
+function showWallFooting(vol){
+  wfOut.innerHTML=`
+    <div class="out">VOLUME: ${vol.toFixed(3)} CU.M</div>
+    <div class="out small">CEMENT: ${Math.ceil(vol*9)} BAGS</div>
+    <div class="out small">SAND: ${(vol*0.5).toFixed(2)} CU.M</div>
+    <div class="out small">GRAVEL: ${(vol*1).toFixed(2)} CU.M</div>`;
+}
+function resetWallFooting(){ wfL.value=wfH.value=wfT.value=wfN.value=0; wfOut.innerHTML=''; }
 
 function calcFloorSlab(){
-  const A=+document.getElementById('slabArea').value;
-  const T=+document.getElementById('slabThick').value;
-  const out=document.getElementById('slabOut');
-  if(A<=0 || T<=0){ out.innerHTML='<div class="out">PLEASE ENTER VALID NUMBERS</div>'; return; }
+  const A=+slabArea.value, T=+slabThick.value;
+  if(A<=0||T<=0) return slabOut.innerHTML=`<div class="out">ENTER VALID NUMBERS</div>`;
   const vol=A*T;
-  const displayVol=vol<1?vol.toFixed(3):Math.round(vol);
-  const cementBags=Math.ceil(vol*9);
-  const sandVol=(vol*0.5).toFixed(2);
-  const gravelVol=(vol*1).toFixed(2);
-  out.innerHTML=`<div class="out">VOLUME: ${displayVol} CU.M</div>
-  <div class="out small">CEMENT BAGS: ${cementBags} BAGS</div>
-  <div class="out small">SAND: ${sandVol} CU.M</div>
-  <div class="out small">GRAVEL 3/4": ${gravelVol} CU.M</div>`;
+  slabOut.innerHTML=`
+    <div class="out">VOLUME: ${vol.toFixed(3)} CU.M</div>
+    <div class="out small">CEMENT: ${Math.ceil(vol*9)} BAGS</div>
+    <div class="out small">SAND: ${(vol*0.5).toFixed(2)} CU.M</div>
+    <div class="out small">GRAVEL: ${(vol*1).toFixed(2)} CU.M</div>`;
 }
-function resetFloorSlab(){ document.getElementById('slabArea').value=0; document.getElementById('slabThick').value=0; document.getElementById('slabOut').innerHTML=''; }
+function resetFloorSlab(){ slabArea.value=slabThick.value=0; slabOut.innerHTML=''; }
 
 function calcRectColumn(){
-  const L=+document.getElementById('colL').value;
-  const W=+document.getElementById('colW').value;
-  const H=+document.getElementById('colH').value;
-  const out=document.getElementById('colOut');
-  if(L<=0 || W<=0 || H<=0){ out.innerHTML='<div class="out">PLEASE ENTER VALID NUMBERS</div>'; return; }
+  const L=+colL.value, W=+colW.value, H=+colH.value;
+  if(L<=0||W<=0||H<=0) return colOut.innerHTML=`<div class="out">ENTER VALID NUMBERS</div>`;
   const vol=L*W*H;
-  const displayVol=vol<1?vol.toFixed(3):Math.round(vol);
-  const cementBags=Math.ceil(vol*9);
-  const sandVol=(vol*0.5).toFixed(2);
-  const gravelVol=(vol*1).toFixed(2);
-  out.innerHTML=`<div class="out">VOLUME: ${displayVol} CU.M</div>
-  <div class="out small">CEMENT BAGS: ${cementBags} BAGS</div>
-  <div class="out small">SAND: ${sandVol} CU.M</div>
-  <div class="out small">GRAVEL 3/4": ${gravelVol} CU.M</div>`;
+  showColumn(vol);
 }
-function resetRectColumn(){ document.getElementById('colL').value=0; document.getElementById('colW').value=0; document.getElementById('colH').value=0; document.getElementById('colOut').innerHTML=''; }
 
 function calcCircColumn(){
-  const D=+document.getElementById('colD').value;
-  const H=+document.getElementById('colHc').value;
-  const out=document.getElementById('colOut');
-  if(D<=0 || H<=0){ out.innerHTML='<div class="out">PLEASE ENTER VALID NUMBERS</div>'; return; }
-  const R=D/2;
-  const vol=Math.PI*R*R*H;
-  const displayVol=vol<1?vol.toFixed(3):Math.round(vol);
-  const cementBags=Math.ceil(vol*9);
-  const sandVol=(vol*0.5).toFixed(2);
-  const gravelVol=(vol*1).toFixed(2);
-  out.innerHTML=`<div class="out">VOLUME: ${displayVol} CU.M</div>
-  <div class="out small">CEMENT BAGS: ${cementBags} BAGS</div>
-  <div class="out small">SAND: ${sandVol} CU.M</div>
-  <div class="out small">GRAVEL 3/4": ${gravelVol} CU.M</div>`;
+  const D=+colD.value, H=+colHc.value;
+  if(D<=0||H<=0) return colOut.innerHTML=`<div class="out">ENTER VALID NUMBERS</div>`;
+  const radius=D/2;
+  const vol=3.1416*radius*radius*H;
+  showColumn(vol);
 }
-function resetCircColumn(){ document.getElementById('colD').value=0; document.getElementById('colHc').value=0; document.getElementById('colOut').innerHTML=''; }
 
-function goHome(){
-  categoryPage.style.display='none';
-  frontPage.style.display='grid';
+function showColumn(vol){
+  colOut.innerHTML=`
+    <div class="out">VOLUME: ${vol.toFixed(3)} CU.M</div>
+    <div class="out small">CEMENT: ${Math.ceil(vol*9)} BAGS</div>
+    <div class="out small">SAND: ${(vol*0.5).toFixed(2)} CU.M</div>
+    <div class="out small">GRAVEL: ${(vol*1).toFixed(2)} CU.M</div>`;
 }
+function resetRectColumn(){ colL.value=colW.value=colH.value=0; colOut.innerHTML=''; }
+function resetCircColumn(){ colD.value=colHc.value=0; colOut.innerHTML=''; }
 </script>
+
 </body>
 </html>
