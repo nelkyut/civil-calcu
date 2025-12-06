@@ -2,48 +2,70 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Footing Calculator</title>
+<title>Construction Calculator</title>
+
 <style>
     body {
+        margin: 0;
         font-family: Arial, sans-serif;
-        background: #f4f4f4;
-        padding: 20px;
+        background: #ececec;
     }
 
-    .container {
-        width: 750px;
-        margin: auto;
-        background: white;
-        padding: 20px;
-        border: 3px solid #222;
-    }
-
-    h1 {
+    /* HEADER */
+    .header {
+        background: #ffd200;
+        padding: 15px;
         text-align: center;
-        background: #ffd000;
-        padding: 10px;
-        margin: 0 0 10px 0;
-        font-size: 20px;
+        font-weight: bold;
+        font-size: 22px;
+        border-bottom: 3px solid #000;
+    }
+
+    /* MAIN WRAPPER */
+    .wrapper {
+        display: flex;
+        padding: 20px;
+        gap: 20px;
+    }
+
+    /* LEFT IMAGE AREA */
+    .left-box {
+        width: 40%;
+        background: #fff;
         border: 2px solid #000;
+        padding: 15px;
+        height: 500px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-weight: bold;
+    }
+
+    /* RIGHT COMPUTATION AREA */
+    .right-box {
+        width: 60%;
+        background: #fff;
+        border: 2px solid #000;
+        padding: 15px;
     }
 
     h2 {
+        margin: 0;
+        padding: 10px;
         background: #d4ff54;
-        padding: 8px;
-        margin-top: 10px;
-        font-size: 18px;
         border: 2px solid #000;
+        font-size: 18px;
     }
 
     table {
         width: 100%;
         border-collapse: collapse;
-        margin-top: 10px;
+        margin-top: 15px;
     }
 
     td {
         border: 1px solid #000;
-        padding: 6px;
+        padding: 7px;
         font-size: 15px;
     }
 
@@ -57,95 +79,109 @@
         font-weight: bold;
     }
 
+    input {
+        width: 100%;
+        padding: 6px;
+        border: none;
+        background: #fff15a;
+        text-align: center;
+        font-weight: bold;
+        font-size: 15px;
+    }
+
     .black {
         background: #000;
         color: #fff;
         font-weight: bold;
-    }
-
-    input {
-        width: 100%;
-        padding: 5px;
-        border: none;
-        font-size: 15px;
         text-align: center;
-        background: #fff15a;
-        font-weight: bold;
     }
 
     .output {
         text-align: center;
         font-weight: bold;
-        font-size: 16px;
+        background: #000;
+        color: #fff;
     }
 
 </style>
 </head>
 <body>
 
-<div class="container">
+<div class="header">
+    CONSTRUCTION ESTIMATE CALCULATOR – FOOTING
+</div>
 
-<h1>CONSTRUCTION ESTIMATE CALCULATOR<br>(FOOTING – VOLUME OF CONCRETE)</h1>
+<div class="wrapper">
 
-<h2>A. DETERMINING THE VOLUME OF A FOOTING</h2>
+    <!-- LEFT SIDE (Image Area) -->
+    <div class="left-box">
+        IMAGE HERE (lalagay mo later)
+    </div>
 
-<table>
+    <!-- RIGHT SIDE (Computation Area) -->
+    <div class="right-box">
 
-<tr>
-    <td class="label">Enter Length</td>
-    <td class="yellow"><input type="number" id="length" step="any"></td>
-    <td class="label">L (M)</td>
-</tr>
+        <h2>A. DETERMINING THE VOLUME OF A FOOTING</h2>
 
-<tr>
-    <td class="label">Enter Width</td>
-    <td class="yellow"><input type="number" id="width" step="any"></td>
-    <td class="label">W (M)</td>
-</tr>
+        <table>
 
-<tr>
-    <td class="label">Enter Thickness</td>
-    <td class="yellow"><input type="number" id="thickness" step="any"></td>
-    <td class="label">T (M)</td>
-</tr>
+            <tr>
+                <td class="label">Enter Length</td>
+                <td class="yellow"><input type="number" id="length" step="any"></td>
+                <td class="label">L (M)</td>
+            </tr>
 
-<tr>
-    <td class="label">Number of Footing</td>
-    <td class="yellow"><input type="number" id="count" step="any"></td>
-    <td class="label">Units</td>
-</tr>
+            <tr>
+                <td class="label">Enter Width</td>
+                <td class="yellow"><input type="number" id="width" step="any"></td>
+                <td class="label">W (M)</td>
+            </tr>
 
-<tr>
-    <td class="black">TOTAL VOLUME (per footing)</td>
-    <td class="output black" id="vol_per">0.000</td>
-    <td class="black">CU.M.</td>
-</tr>
+            <tr>
+                <td class="label">Enter Thickness</td>
+                <td class="yellow"><input type="number" id="thickness" step="any"></td>
+                <td class="label">T (M)</td>
+            </tr>
 
-<tr>
-    <td class="black">TOTAL VOLUME OF CONCRETE</td>
-    <td class="output black" id="vol_total">0.000</td>
-    <td class="black">CU.M.</td>
-</tr>
+            <tr>
+                <td class="label">Number of Footing</td>
+                <td class="yellow"><input type="number" id="count" step="any"></td>
+                <td class="label">Units</td>
+            </tr>
 
-<tr>
-    <td class="label"># OF CEMENT</td>
-    <td class="output" id="cement">0</td>
-    <td class="label">BAGS</td>
-</tr>
+            <tr>
+                <td class="black">VOLUME per FOOTING</td>
+                <td class="output" id="vol_per">0.000</td>
+                <td class="black">CU.M.</td>
+            </tr>
 
-<tr>
-    <td class="label">VOL. OF SAND</td>
-    <td class="output" id="sand">0.000</td>
-    <td class="label">CU.M.</td>
-</tr>
+            <tr>
+                <td class="black">TOTAL VOLUME</td>
+                <td class="output" id="vol_total">0.000</td>
+                <td class="black">CU.M.</td>
+            </tr>
 
-<tr>
-    <td class="label">VOL. OF 3/4" GRAVEL</td>
-    <td class="output" id="gravel">0.000</td>
-    <td class="label">CU.M.</td>
-</tr>
+            <tr>
+                <td class="label"># OF CEMENT</td>
+                <td class="output" id="cement">0</td>
+                <td class="label">BAGS</td>
+            </tr>
 
-</table>
+            <tr>
+                <td class="label">VOL. OF SAND</td>
+                <td class="output" id="sand">0.000</td>
+                <td class="label">CU.M.</td>
+            </tr>
+
+            <tr>
+                <td class="label">VOL. OF 3/4" GRAVEL</td>
+                <td class="output" id="gravel">0.000</td>
+                <td class="label">CU.M.</td>
+            </tr>
+
+        </table>
+
+    </div>
 
 </div>
 
@@ -159,21 +195,19 @@ function compute(){
     let vol_per = L * W * T;
     let vol_total = vol_per * N;
 
-    // Concrete mix (CHB Class A approximation)
-    let cement = vol_total * 12;     // bags
-    let sand = vol_total * 0.5;      // cu.m.
-    let gravel = vol_total * 1.0;    // cu.m.
+    let cement = vol_total * 12;    
+    let sand = vol_total * 0.5;
+    let gravel = vol_total * 1.0;
 
     document.getElementById("vol_per").innerHTML = vol_per.toFixed(3);
     document.getElementById("vol_total").innerHTML = vol_total.toFixed(3);
-
     document.getElementById("cement").innerHTML = cement.toFixed(0);
     document.getElementById("sand").innerHTML = sand.toFixed(3);
     document.getElementById("gravel").innerHTML = gravel.toFixed(3);
 }
 
-document.querySelectorAll("input").forEach(i=>{
-    i.addEventListener("input", compute);
+document.querySelectorAll("input").forEach(x => {
+    x.addEventListener("input", compute);
 });
 </script>
 
