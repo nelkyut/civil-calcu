@@ -19,7 +19,7 @@ body{
   padding:20px;
 }
 .app{
-  max-width:1100px;
+  max-width:1200px;
   margin:0 auto;
 }
 header{
@@ -50,40 +50,49 @@ header .text p{
   color:#333;
   text-transform:uppercase;
 }
-.tabs{
+.tiles{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(120px,1fr));
+  gap:12px;
+  margin:18px 0;
+}
+.tile{
+  background:#fff;
+  padding:20px;
+  border-radius:10px;
+  text-align:center;
+  font-weight:600;
+  font-size:14px;
+  cursor:pointer;
+  box-shadow:0 2px 6px rgba(0,0,0,0.1);
+  text-transform:uppercase;
+  transition:0.2s;
+}
+.tile:hover{transform:scale(1.05);box-shadow:0 4px 10px rgba(0,0,0,0.2);}
+.subtabs{
   display:flex;
   gap:8px;
-  margin:18px 0;
+  margin:12px 0;
   flex-wrap:wrap;
 }
-.tab{
+.subtab{
   background:#fff;
-  padding:8px 12px;
+  padding:6px 12px;
   border-radius:6px;
   cursor:pointer;
-  font-size:14px;
+  font-size:13px;
   box-shadow:0 1px 2px rgba(0,0,0,.06);
   text-transform:uppercase;
 }
-.tab.active{
+.subtab.active{
   background:linear-gradient(180deg,var(--card),#f7f7f7);
   border:2px solid var(--accent-dark);
-}
-.grid{
-  display:grid;
-  grid-template-columns:1fr 380px;
-  gap:18px;
 }
 .card{
   background:#fff;
   padding:14px;
   border-radius:10px;
   box-shadow:0 2px 6px rgba(0,0,0,.05);
-}
-.sidebar img{
-  width:100%;
-  border-radius:10px;
-  margin-bottom:12px;
 }
 .row{
   display:flex;
@@ -149,34 +158,20 @@ input[type=number], select{
   <img src="your-image.jpg" alt="Logo">
   <div class="text">
     <h1>BULARON CONSTRUCTION ESTIMATE CALCULATOR</h1>
-    <p>CLICK TAB TO SELECT CATEGORY</p>
+    <p>CLICK TILE TO SELECT CATEGORY</p>
   </div>
 </header>
 
-<div class="tabs" id="tabs"></div>
+<div id="frontPage" class="tiles"></div>
 
-<div class="grid">
+<div id="categoryPage" style="display:none;">
+  <div class="subtabs" id="subtabs"></div>
   <div class="card" id="main"></div>
-
-  <div class="sidebar card">
-    <img src="your-image.jpg">
-    <h3>QUICK INPUTS</h3>
-    <div class="row">
-      <label>CONCRETE CLASS</label>
-      <select id="mixClass">
-        <option value="1:2:4">CLASS A 1:2:4</option>
-        <option value="1:1.5:3">CLASS B 1:1.5:3</option>
-      </select>
-    </div>
-    <div class="row"><label>CEMENT BAG VOLUME</label><input id="bagVol" type="number" value="0.035"></div>
-    <div class="row"><label>CEMENT BAG WEIGHT</label><input id="bagKg" type="number" value="40"></div>
-    <div class="row"><label>ALLOWANCES (%)</label><input id="wastePct" type="number" value="10"></div>
-    <button class="btn" onclick="downloadProject()">DOWNLOAD HTML</button>
-    <p class="small-muted">UPLOAD AS INDEX.HTML SA GITHUB</p>
-
-    <hr/>
+  <div class="card" style="margin-top:12px;">
     <h3>GLOBAL OUTPUTS</h3>
     <div id="globalOutputs" class="result-list"></div>
+    <button class="btn" onclick="downloadProject()">DOWNLOAD HTML</button>
+    <p class="small-muted">UPLOAD AS INDEX.HTML SA GITHUB</p>
   </div>
 </div>
 
@@ -186,63 +181,73 @@ input[type=number], select{
 </div>
 
 <script>
-/* -------------------- TABS -------------------- */
-const tabs = [
-  {id:'concreting', title:'CONCRETING'},
-  {id:'masonry', title:'MASONRY'},
-  {id:'reinforcement', title:'REINFORCEMENT'},
-  {id:'carpentry', title:'CARPENTRY'},
-  {id:'roofing', title:'ROOFING WORKS'},
-  {id:'tiling', title:'TILING WORKS'},
-  {id:'painting', title:'PAINTING WORKS'},
-  {id:'scaffolding', title:'SCAFFOLDING'}
+const categories=[
+  {id:'concreting', title:'CONCRETING', subtabs:['FOOTING','SLAB','BEAM','COLUMN','REBAR']},
+  {id:'masonry', title:'MASONRY', subtabs:['CHB WALL']},
+  {id:'reinforcement', title:'REINFORCEMENT', subtabs:[]},
+  {id:'carpentry', title:'CARPENTRY', subtabs:[]},
+  {id:'roofing', title:'ROOFING WORKS', subtabs:[]},
+  {id:'tiling', title:'TILING WORKS', subtabs:[]},
+  {id:'painting', title:'PAINTING WORKS', subtabs:[]},
+  {id:'scaffolding', title:'SCAFFOLDING', subtabs:[]}
 ];
 
-const main = document.getElementById('main');
-const globalOutputs = document.getElementById('globalOutputs');
+const frontPage=document.getElementById('frontPage');
+const categoryPage=document.getElementById('categoryPage');
+const main=document.getElementById('main');
+const subtabsEl=document.getElementById('subtabs');
+const globalOutputs=document.getElementById('globalOutputs');
 
-tabs.forEach(t=>{
-  const el=document.createElement('div');
-  el.className='tab';
-  el.textContent=t.title;
-  el.dataset.id=t.id;
-  el.onclick=()=>selectTab(t.id);
-  document.getElementById('tabs').appendChild(el);
+// CREATE FRONT PAGE TILES
+categories.forEach(c=>{
+  const t=document.createElement('div');
+  t.className='tile';
+  t.textContent=c.title;
+  t.onclick=()=>openCategory(c);
+  frontPage.appendChild(t);
 });
-selectTab('concreting');
 
-function selectTab(id){
-  document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('active', x.dataset.id===id));
-  renderTab(id);
+function openCategory(cat){
+  frontPage.style.display='none';
+  categoryPage.style.display='block';
+  globalOutputs.innerHTML='';
+  if(cat.subtabs.length>0){
+    subtabsEl.innerHTML='';
+    cat.subtabs.forEach((s,i)=>{
+      const st=document.createElement('div');
+      st.className='subtab';
+      st.textContent=s;
+      st.onclick=()=>{selectSubtab(cat.id,s);};
+      if(i===0) st.classList.add('active');
+      subtabsEl.appendChild(st);
+    });
+    selectSubtab(cat.id,cat.subtabs[0]);
+  }else{
+    subtabsEl.innerHTML='';
+    main.innerHTML=`<h2>${cat.title}</h2><p>INPUTS HERE</p>`;
+  }
 }
 
-function renderTab(id){
-  if(id==='concreting') return renderConcreting();
-  if(id==='masonry') return renderMasonry();
-  if(id==='reinforcement') return renderRebar();
-  if(id==='carpentry') return renderCarpentry();
-  if(id==='roofing') return renderRoofing();
-  if(id==='tiling') return renderTiling();
-  if(id==='painting') return renderPaint();
-  if(id==='scaffolding') return renderScaffolding();
+// -------------------- CONCRETING SUBTABS --------------------
+function selectSubtab(catId,subtab){
+  document.querySelectorAll('.subtab').forEach(x=>x.classList.toggle('active',x.textContent===subtab));
+  if(catId==='concreting'){
+    if(subtab==='FOOTING') renderFooting();
+    if(subtab==='SLAB') renderSlab();
+    if(subtab==='BEAM') renderBeam();
+    if(subtab==='COLUMN') renderColumn();
+    if(subtab==='REBAR') renderRebar();
+  }
 }
 
-/* -------------------- GLOBAL OUTPUTS -------------------- */
-function setGlobal(label,val){
-  const item=document.createElement('div');
-  item.className='out small';
-  item.textContent=`${label}: ${val.toFixed(3)} CU.M`;
-  globalOutputs.appendChild(item);
-}
-
-/* -------------------- CONCRETING -------------------- */
-function renderConcreting(){
+// -------------------- FOOTING --------------------
+function renderFooting(){
   main.innerHTML=`
-    <h2>CONCRETING CALCULATOR</h2>
-    <div class="row"><label>LENGTH (M)</label><input id="fL" type="number" value="0"></div>
-    <div class="row"><label>WIDTH (M)</label><input id="fW" type="number" value="0"></div>
-    <div class="row"><label>THICKNESS (MM)</label><input id="fT" type="number" value="0"></div>
-    <div class="row"><label>QUANTITY</label><input id="fN" type="number" value="0"></div>
+    <h2>FOOTING</h2>
+    <div class="row"><label>LENGTH (M)</label><input id="fL" value="0"></div>
+    <div class="row"><label>WIDTH (M)</label><input id="fW" value="0"></div>
+    <div class="row"><label>THICKNESS (MM)</label><input id="fT" value="0"></div>
+    <div class="row"><label>QUANTITY</label><input id="fN" value="0"></div>
     <button class="btn" onclick="calcFooting()">COMPUTE</button>
     <hr/><div id="fOut"></div>
   `;
@@ -251,42 +256,76 @@ function calcFooting(){
   const L=+fL.value, W=+fW.value, T=+fT.value/1000, n=+fN.value;
   const vol=L*W*T*n;
   fOut.innerHTML=`<div class="out">VOLUME: ${vol.toFixed(3)} CU.M</div>`;
-  setGlobal("CONCRETING",vol);
+  setGlobal("FOOTING",vol);
 }
 
-/* -------------------- MASONRY -------------------- */
-function renderMasonry(){
+// -------------------- SLAB --------------------
+function renderSlab(){
   main.innerHTML=`
-    <h2>MASONRY CALCULATOR</h2>
-    <div class="row"><label>LENGTH (M)</label><input id="chL" value="0"></div>
-    <div class="row"><label>HEIGHT (M)</label><input id="chH" value="0"></div>
-    <button class="btn" onclick="calcCHB()">COMPUTE</button>
-    <hr/><div id="chOut"></div>
+    <h2>SLAB</h2>
+    <div class="row"><label>LENGTH (M)</label><input id="sL" value="0"></div>
+    <div class="row"><label>WIDTH (M)</label><input id="sW" value="0"></div>
+    <div class="row"><label>THICKNESS (MM)</label><input id="sT" value="0"></div>
+    <div class="row"><label>QUANTITY</label><input id="sN" value="0"></div>
+    <button class="btn" onclick="calcSlab()">COMPUTE</button>
+    <hr/><div id="sOut"></div>
   `;
 }
-function calcCHB(){
-  const area=+chL.value * +chH.value;
-  const pcs=area*12.5;
-  chOut.innerHTML=`<div class="out">${pcs.toFixed(0)} PCS CHB</div>`;
-  setGlobal("MASONRY",pcs);
+function calcSlab(){
+  const L=+sL.value, W=+sW.value, T=+sT.value/1000, n=+sN.value;
+  const vol=L*W*T*n;
+  sOut.innerHTML=`<div class="out">VOLUME: ${vol.toFixed(3)} CU.M</div>`;
+  setGlobal("SLAB",vol);
 }
 
-/* -------------------- OTHER PLACEHOLDER CALCULATORS -------------------- */
-function renderRebar(){ main.innerHTML=`<h2>REINFORCEMENT</h2><p>INPUTS HERE</p>`;}
-function renderCarpentry(){ main.innerHTML=`<h2>CARPENTRY</h2><p>INPUTS HERE</p>`;}
-function renderRoofing(){ main.innerHTML=`<h2>ROOFING WORKS</h2><p>INPUTS HERE</p>`;}
-function renderTiling(){ main.innerHTML=`<h2>TILING WORKS</h2><p>INPUTS HERE</p>`;}
-function renderPaint(){ main.innerHTML=`<h2>PAINTING WORKS</h2><p>INPUTS HERE</p>`;}
-function renderScaffolding(){ main.innerHTML=`<h2>SCAFFOLDING</h2><p>INPUTS HERE</p>`;}
-
-/* DOWNLOAD HTML */
-function downloadProject(){
-  const blob=new Blob([document.documentElement.outerHTML],{type:"text/html"});
-  const a=document.createElement("a");
-  a.href=URL.createObjectURL(blob);
-  a.download="bularon-calculator.html";
-  a.click();
+// -------------------- BEAM --------------------
+function renderBeam(){
+  main.innerHTML=`
+    <h2>BEAM</h2>
+    <div class="row"><label>LENGTH (M)</label><input id="bL" value="0"></div>
+    <div class="row"><label>WIDTH (MM)</label><input id="bW" value="0"></div>
+    <div class="row"><label>HEIGHT (MM)</label><input id="bH" value="0"></div>
+    <div class="row"><label>QUANTITY</label><input id="bN" value="0"></div>
+    <button class="btn" onclick="calcBeam()">COMPUTE</button>
+    <hr/><div id="bOut"></div>
+  `;
 }
-</script>
-</body>
-</html>
+function calcBeam(){
+  const L=+bL.value, W=+bW.value/1000, H=+bH.value/1000, n=+bN.value;
+  const vol=L*W*H*n;
+  bOut.innerHTML=`<div class="out">VOLUME: ${vol.toFixed(3)} CU.M</div>`;
+  setGlobal("BEAM",vol);
+}
+
+// -------------------- COLUMN --------------------
+function renderColumn(){
+  main.innerHTML=`
+    <h2>COLUMN</h2>
+    <div class="row"><label>HEIGHT (M)</label><input id="cL" value="0"></div>
+    <div class="row"><label>WIDTH (MM)</label><input id="cW" value="0"></div>
+    <div class="row"><label>DEPTH (MM)</label><input id="cD" value="0"></div>
+    <div class="row"><label>QUANTITY</label><input id="cN" value="0"></div>
+    <button class="btn" onclick="calcColumn()">COMPUTE</button>
+    <hr/><div id="cOut"></div>
+  `;
+}
+function calcColumn(){
+  const L=+cL.value, W=+cW.value/1000, D=+cD.value/1000, n=+cN.value;
+  const vol=L*W*D*n;
+  cOut.innerHTML=`<div class="out">VOLUME: ${vol.toFixed(3)} CU.M</div>`;
+  setGlobal("COLUMN",vol);
+}
+
+// -------------------- REBAR --------------------
+function renderRebar(){
+  main.innerHTML=`
+    <h2>REBAR</h2>
+    <div class="row"><label>DIAMETER (MM)</label><input id="rDia" value="0"></div>
+    <div class="row"><label>LENGTH (M)</label><input id="rLen" value="0"></div>
+    <div class="row"><label>QUANTITY</label><input id="rQty" value="0"></div>
+    <button class="btn" onclick="calcRebar()">COMPUTE</button>
+    <hr/><div id="rOut"></div>
+  `;
+}
+function calcRebar(){
+  const d=+rDi
