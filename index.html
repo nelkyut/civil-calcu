@@ -177,7 +177,7 @@ input[type=number], select{
 
 <script>
 const categories=[
-  {id:'concreting', title:'CONCRETING', subtabs:['FOOTING','SLAB','BEAM','COLUMN','REBAR']},
+  {id:'concreting', title:'CONCRETING', subtabs:['FOOTING','WALL FOOTING','CONCRETE BEAMS','FLOOR SLAB','CONCRETE COLUMNS','CONCRETE STAIRS']},
   {id:'masonry', title:'MASONRY', subtabs:['CHB WALL']},
   {id:'reinforcement', title:'REINFORCEMENT', subtabs:[]},
   {id:'carpentry', title:'CARPENTRY', subtabs:[]},
@@ -191,7 +191,7 @@ const frontPage=document.getElementById('frontPage');
 const categoryPage=document.getElementById('categoryPage');
 const main=document.getElementById('main');
 
-// CREATE FRONT PAGE TILES
+// FRONT PAGE TILES
 categories.forEach(cat=>{
   const tile=document.createElement('div');
   tile.className='tile';
@@ -227,14 +227,15 @@ function selectSubtab(catId,subtab){
   document.querySelectorAll('.subtab').forEach(x=>x.classList.toggle('active',x.textContent===subtab));
   if(catId==='concreting'){
     if(subtab==='FOOTING') renderFooting();
-    if(subtab==='SLAB') renderSlab();
-    if(subtab==='BEAM') renderBeam();
-    if(subtab==='COLUMN') renderColumn();
-    if(subtab==='REBAR') renderRebar();
+    if(subtab==='WALL FOOTING') renderWallFooting();
+    if(subtab==='CONCRETE BEAMS') renderConcreteBeams();
+    if(subtab==='FLOOR SLAB') renderFloorSlab();
+    if(subtab==='CONCRETE COLUMNS') renderConcreteColumns();
+    if(subtab==='CONCRETE STAIRS') renderConcreteStairs();
   }
 }
 
-// FOOTING (ALL METERS + MATERIALS ESTIMATE)
+// FOOTING
 function renderFooting(){
   main.innerHTML=`
     <h2>FOOTING</h2>
@@ -248,56 +249,175 @@ function renderFooting(){
   `;
 }
 
-function calcFooting(){
-  const fOut = document.getElementById('fOut');
-  const L = +document.getElementById('fL').value;
-  const W = +document.getElementById('fW').value;
-  const T = +document.getElementById('fT').value; // meters
-  const N = +document.getElementById('fN').value;
-
-  if(L<=0 || W<=0 || T<=0 || N<=0){
-    fOut.innerHTML = `<div class="out">PLEASE ENTER VALID NUMBERS</div>`;
-    return;
-  }
-
-  const vol = L * W * T * N;
-
-  const displayVol = vol < 1 ? vol.toFixed(3) : Math.round(vol);
-
-  // MATERIALS ESTIMATE (Tamang formula para sa iyong example)
-  const totalVolume = vol;
-  const cementBags = Math.ceil(totalVolume * 9);     // 9 bags per cu.m
-  const sandVol = (totalVolume * 0.5).toFixed(2);   // sand cu.m
-  const gravelVol = (totalVolume * 1).toFixed(2);   // gravel cu.m
-
-  fOut.innerHTML = `
-    <div class="out">VOLUME: ${displayVol} CU.M</div>
-    <div class="out small">CEMENT BAGS: ${cementBags} BAGS</div>
-    <div class="out small">SAND: ${sandVol} CU.M</div>
-    <div class="out small">GRAVEL 3/4": ${gravelVol} CU.M</div>
+// WALL FOOTING
+function renderWallFooting(){
+  main.innerHTML=`
+    <h2>WALL FOOTING</h2>
+    <div class="row"><label>LENGTH (M)</label><input id="wfL" type="number" value="0"></div>
+    <div class="row"><label>HEIGHT (M)</label><input id="wfH" type="number" value="0"></div>
+    <div class="row"><label>THICKNESS (M)</label><input id="wfT" type="number" value="0"></div>
+    <div class="row"><label>QUANTITY</label><input id="wfN" type="number" value="0"></div>
+    <button class="btn" onclick="calcWallFooting()">COMPUTE</button>
+    <button class="btn" onclick="resetWallFooting()">RESET</button>
+    <hr/><div id="wfOut"></div>
   `;
 }
 
-function resetFooting(){
-  const fOut = document.getElementById('fOut');
-  document.getElementById('fL').value = 0;
-  document.getElementById('fW').value = 0;
-  document.getElementById('fT').value = 0;
-  document.getElementById('fN').value = 0;
-  fOut.innerHTML = '';
+// CONCRETE BEAMS
+function renderConcreteBeams(){
+  main.innerHTML='<h2>CONCRETE BEAMS INPUTS HERE</h2>';
 }
 
-// GO HOME
+// FLOOR SLAB
+function renderFloorSlab(){
+  main.innerHTML=`
+    <h2>FLOOR SLAB - BY AREA</h2>
+    <div class="row"><label>AREA (SQ.M)</label><input id="slabArea" type="number" value="0"></div>
+    <div class="row"><label>THICKNESS (M)</label><input id="slabThick" type="number" value="0"></div>
+    <button class="btn" onclick="calcFloorSlab()">COMPUTE</button>
+    <button class="btn" onclick="resetFloorSlab()">RESET</button>
+    <hr/><div id="slabOut"></div>
+  `;
+}
+
+// CONCRETE COLUMNS
+function renderConcreteColumns(){
+  main.innerHTML=`
+    <h2>CONCRETE COLUMNS</h2>
+    <div class="subtabs" id="columnSubtabs">
+      <div class="subtab active" onclick="selectColumnType('rect')">RECTANGULAR</div>
+      <div class="subtab" onclick="selectColumnType('circ')">CIRCULAR</div>
+    </div>
+    <div id="columnContent"></div>
+  `;
+  selectColumnType('rect');
+}
+
+function selectColumnType(type){
+  document.querySelectorAll('#columnSubtabs .subtab')
+          .forEach(x=>x.classList.toggle('active', x.textContent.toLowerCase().includes(type==='rect'?'rect':'circ')));
+  const content = document.getElementById('columnContent');
+  if(type==='rect'){
+    content.innerHTML=`
+      <div class="row"><label>LENGTH (M)</label><input id="colL" type="number" value="0"></div>
+      <div class="row"><label>WIDTH (M)</label><input id="colW" type="number" value="0"></div>
+      <div class="row"><label>HEIGHT (M)</label><input id="colH" type="number" value="0"></div>
+      <button class="btn" onclick="calcRectColumn()">COMPUTE</button>
+      <button class="btn" onclick="resetRectColumn()">RESET</button>
+      <hr/><div id="colOut"></div>
+    `;
+  }else{
+    content.innerHTML=`
+      <div class="row"><label>DIAMETER (M)</label><input id="colD" type="number" value="0"></div>
+      <div class="row"><label>HEIGHT (M)</label><input id="colHc" type="number" value="0"></div>
+      <button class="btn" onclick="calcCircColumn()">COMPUTE</button>
+      <button class="btn" onclick="resetCircColumn()">RESET</button>
+      <hr/><div id="colOut"></div>
+    `;
+  }
+}
+
+// CONCRETE STAIRS
+function renderConcreteStairs(){
+  main.innerHTML='<h2>CONCRETE STAIRS INPUTS HERE</h2>';
+}
+
+// ---------------- CALC FUNCTIONS ----------------
+function calcFooting(){
+  const fOut=document.getElementById('fOut');
+  const L=+document.getElementById('fL').value;
+  const W=+document.getElementById('fW').value;
+  const T=+document.getElementById('fT').value;
+  const N=+document.getElementById('fN').value;
+  if(L<=0 || W<=0 || T<=0 || N<=0){ fOut.innerHTML='<div class="out">PLEASE ENTER VALID NUMBERS</div>'; return; }
+  const vol=L*W*T*N;
+  const displayVol=vol<1?vol.toFixed(3):Math.round(vol);
+  const cementBags=Math.ceil(vol*9);
+  const sandVol=(vol*0.5).toFixed(2);
+  const gravelVol=(vol*1).toFixed(2);
+  fOut.innerHTML=`<div class="out">VOLUME: ${displayVol} CU.M</div>
+  <div class="out small">CEMENT BAGS: ${cementBags} BAGS</div>
+  <div class="out small">SAND: ${sandVol} CU.M</div>
+  <div class="out small">GRAVEL 3/4": ${gravelVol} CU.M</div>`;
+}
+function resetFooting(){ document.getElementById('fL').value=0; document.getElementById('fW').value=0; document.getElementById('fT').value=0; document.getElementById('fN').value=0; document.getElementById('fOut').innerHTML=''; }
+
+function calcWallFooting(){
+  const L=+document.getElementById('wfL').value;
+  const H=+document.getElementById('wfH').value;
+  const T=+document.getElementById('wfT').value;
+  const N=+document.getElementById('wfN').value;
+  const wfOut=document.getElementById('wfOut');
+  if(L<=0 || H<=0 || T<=0 || N<=0){ wfOut.innerHTML='<div class="out">PLEASE ENTER VALID NUMBERS</div>'; return; }
+  const vol=L*H*T*N;
+  const displayVol=vol<1?vol.toFixed(3):Math.round(vol);
+  const cementBags=Math.ceil(vol*9);
+  const sandVol=(vol*0.5).toFixed(2);
+  const gravelVol=(vol*1).toFixed(2);
+  wfOut.innerHTML=`<div class="out">VOLUME: ${displayVol} CU.M</div>
+  <div class="out small">CEMENT BAGS: ${cementBags} BAGS</div>
+  <div class="out small">SAND: ${sandVol} CU.M</div>
+  <div class="out small">GRAVEL 3/4": ${gravelVol} CU.M</div>`;
+}
+function resetWallFooting(){ document.getElementById('wfL').value=0; document.getElementById('wfH').value=0; document.getElementById('wfT').value=0; document.getElementById('wfN').value=0; document.getElementById('wfOut').innerHTML=''; }
+
+function calcFloorSlab(){
+  const A=+document.getElementById('slabArea').value;
+  const T=+document.getElementById('slabThick').value;
+  const out=document.getElementById('slabOut');
+  if(A<=0 || T<=0){ out.innerHTML='<div class="out">PLEASE ENTER VALID NUMBERS</div>'; return; }
+  const vol=A*T;
+  const displayVol=vol<1?vol.toFixed(3):Math.round(vol);
+  const cementBags=Math.ceil(vol*9);
+  const sandVol=(vol*0.5).toFixed(2);
+  const gravelVol=(vol*1).toFixed(2);
+  out.innerHTML=`<div class="out">VOLUME: ${displayVol} CU.M</div>
+  <div class="out small">CEMENT BAGS: ${cementBags} BAGS</div>
+  <div class="out small">SAND: ${sandVol} CU.M</div>
+  <div class="out small">GRAVEL 3/4": ${gravelVol} CU.M</div>`;
+}
+function resetFloorSlab(){ document.getElementById('slabArea').value=0; document.getElementById('slabThick').value=0; document.getElementById('slabOut').innerHTML=''; }
+
+function calcRectColumn(){
+  const L=+document.getElementById('colL').value;
+  const W=+document.getElementById('colW').value;
+  const H=+document.getElementById('colH').value;
+  const out=document.getElementById('colOut');
+  if(L<=0 || W<=0 || H<=0){ out.innerHTML='<div class="out">PLEASE ENTER VALID NUMBERS</div>'; return; }
+  const vol=L*W*H;
+  const displayVol=vol<1?vol.toFixed(3):Math.round(vol);
+  const cementBags=Math.ceil(vol*9);
+  const sandVol=(vol*0.5).toFixed(2);
+  const gravelVol=(vol*1).toFixed(2);
+  out.innerHTML=`<div class="out">VOLUME: ${displayVol} CU.M</div>
+  <div class="out small">CEMENT BAGS: ${cementBags} BAGS</div>
+  <div class="out small">SAND: ${sandVol} CU.M</div>
+  <div class="out small">GRAVEL 3/4": ${gravelVol} CU.M</div>`;
+}
+function resetRectColumn(){ document.getElementById('colL').value=0; document.getElementById('colW').value=0; document.getElementById('colH').value=0; document.getElementById('colOut').innerHTML=''; }
+
+function calcCircColumn(){
+  const D=+document.getElementById('colD').value;
+  const H=+document.getElementById('colHc').value;
+  const out=document.getElementById('colOut');
+  if(D<=0 || H<=0){ out.innerHTML='<div class="out">PLEASE ENTER VALID NUMBERS</div>'; return; }
+  const R=D/2;
+  const vol=Math.PI*R*R*H;
+  const displayVol=vol<1?vol.toFixed(3):Math.round(vol);
+  const cementBags=Math.ceil(vol*9);
+  const sandVol=(vol*0.5).toFixed(2);
+  const gravelVol=(vol*1).toFixed(2);
+  out.innerHTML=`<div class="out">VOLUME: ${displayVol} CU.M</div>
+  <div class="out small">CEMENT BAGS: ${cementBags} BAGS</div>
+  <div class="out small">SAND: ${sandVol} CU.M</div>
+  <div class="out small">GRAVEL 3/4": ${gravelVol} CU.M</div>`;
+}
+function resetCircColumn(){ document.getElementById('colD').value=0; document.getElementById('colHc').value=0; document.getElementById('colOut').innerHTML=''; }
+
 function goHome(){
   categoryPage.style.display='none';
   frontPage.style.display='grid';
 }
-
-// Placeholder for other concreting subtabs
-function renderSlab(){ main.innerHTML='<h2>SLAB INPUTS HERE</h2>'; }
-function renderBeam(){ main.innerHTML='<h2>BEAM INPUTS HERE</h2>'; }
-function renderColumn(){ main.innerHTML='<h2>COLUMN INPUTS HERE</h2>'; }
-function renderRebar(){ main.innerHTML='<h2>REBAR INPUTS HERE</h2>'; }
 </script>
 </body>
 </html>
