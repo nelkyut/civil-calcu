@@ -255,10 +255,10 @@ function selectSubtab(catId,subtab){
 function renderFooting(){
   main.innerHTML=`
     <h2>FOOTING</h2>
-    <div class="row"><label>LENGTH (M)</label><input id="fL" type="number" value="0" step="any"></div>
-    <div class="row"><label>WIDTH (M)</label><input id="fW" type="number" value="0" step="any"></div>
-    <div class="row"><label>THICKNESS (M)</label><input id="fT" type="number" value="0" step="any"></div>
-    <div class="row"><label>NUMBER OF FOOTING</label><input id="fN" type="number" value="0" step="1"></div>
+    <div class="row"><label>LENGTH (M)</label><input id="fL" type="number" value="0"></div>
+    <div class="row"><label>WIDTH (M)</label><input id="fW" type="number" value="0"></div>
+    <div class="row"><label>THICKNESS (M)</label><input id="fT" type="number" value="0"></div>
+    <div class="row"><label>NUMBER OF FOOTING</label><input id="fN" type="number" value="0"></div>
     <button class="btn" onclick="calcFooting()">COMPUTE</button>
     <button class="btn" onclick="resetFooting()">RESET</button>
     <hr/><div id="fOut"></div>
@@ -269,10 +269,10 @@ function renderFooting(){
 function renderWallFooting(){
   main.innerHTML=`
     <h2>WALL FOOTING</h2>
-    <div class="row"><label>LENGTH (M)</label><input id="wfL" type="number" value="0" step="any"></div>
-    <div class="row"><label>WIDTH (M)</label><input id="wfH" type="number" value="0" step="any"></div>
-    <div class="row"><label>THICKNESS (M)</label><input id="wfT" type="number" value="0" step="any"></div>
-    <div class="row"><label>NUMBER OF WALL FOOTING</label><input id="wfN" type="number" value="0" step="1"></div>
+    <div class="row"><label>LENGTH (M)</label><input id="wfL" type="number" value="0"></div>
+    <div class="row"><label>WIDTH (M)</label><input id="wfH" type="number" value="0"></div>
+    <div class="row"><label>THICKNESS (M)</label><input id="wfT" type="number" value="0"></div>
+    <div class="row"><label>NUMBER OF WALL FOOTING</label><input id="wfN" type="number" value="0"></div>
     <button class="btn" onclick="calcWallFooting()">COMPUTE</button>
     <button class="btn" onclick="resetWallFooting()">RESET</button>
     <hr/><div id="wfOut"></div>
@@ -285,16 +285,16 @@ function renderConcreteBeams(){
     <h2>CONCRETE BEAMS</h2>
 
     <div class="row"><label>LENGTH (M)</label>
-      <input id="bL" type="number" value="0" step="any"></div>
+      <input id="bL" type="number" value="0"></div>
 
     <div class="row"><label>WIDTH (M)</label>
-      <input id="bW" type="number" value="0" step="any"></div>
+      <input id="bW" type="number" value="0"></div>
 
     <div class="row"><label>DEPTH (M)</label>
-      <input id="bH" type="number" value="0" step="any"></div>
+      <input id="bH" type="number" value="0"></div>
 
     <div class="row"><label>NUMBER OF BEAMS</label>
-      <input id="bN" type="number" value="0" step="1"></div>
+      <input id="bN" type="number" value="0"></div>
 
     <button class="btn" onclick="calcBeams()">COMPUTE</button>
     <button class="btn" onclick="resetBeams()">RESET</button>
@@ -308,8 +308,8 @@ function renderConcreteBeams(){
 function renderFloorSlab(){
   main.innerHTML=`
     <h2>FLOOR SLAB - BY AREA</h2>
-    <div class="row"><label>AREA (SQ.M)</label><input id="slabArea" type="number" value="0" step="any"></div>
-    <div class="row"><label>THICKNESS (M)</label><input id="slabThick" type="number" value="0" step="any"></div>
+    <div class="row"><label>AREA (SQ.M)</label><input id="slabArea" type="number" value="0"></div>
+    <div class="row"><label>THICKNESS (M)</label><input id="slabThick" type="number" value="0"></div>
     <button class="btn" onclick="calcFloorSlab()">COMPUTE</button>
     <button class="btn" onclick="resetFloorSlab()">RESET</button>
     <hr/><div id="slabOut"></div>
@@ -337,17 +337,24 @@ function selectColumnType(type){
 
   if(type==='rect'){
     content.innerHTML=`
-      <div class="row"><label>WIDTH 1 (M)</label><input id="colL" type="number" value="0" step="any"></div>
-      <div class="row"><label>WIDTH 2 (M)</label><input id="colW" type="number" value="0" step="any"></div>
-      <div class="row"><label>HEIGHT (M)</label><input id="colH" type="number" value="0" step="any"></div>
+      <div class="row"><label>WIDTH 1 (M)</label><input id="colL" type="number" value="0"></div>
+      <div class="row"><label>WIDTH 2 (M)</label><input id="colW" type="number" value="0"></div>
+      <div class="row"><label>HEIGHT (M)</label><input id="colH" type="number" value="0"></div>
+
+      <div class="row"><label>NUMBER OF COLUMNS</label><input id="colN" type="number" value="0"></div>
+
       <button class="btn" onclick="calcRectColumn()">COMPUTE</button>
       <button class="btn" onclick="resetRectColumn()">RESET</button>
       <hr/><div id="colOut"></div>
     `;
-  } else {
+  } 
+  else {
     content.innerHTML=`
-      <div class="row"><label>DIAMETER (M)</label><input id="colD" type="number" value="0" step="any"></div>
-      <div class="row"><label>HEIGHT (M)</label><input id="colHc" type="number" value="0" step="any"></div>
+      <div class="row"><label>DIAMETER (M)</label><input id="colD" type="number" value="0"></div>
+      <div class="row"><label>HEIGHT (M)</label><input id="colHc" type="number" value="0"></div>
+
+      <div class="row"><label>NUMBER OF COLUMNS</label><input id="colNc" type="number" value="0"></div>
+
       <button class="btn" onclick="calcCircColumn()">COMPUTE</button>
       <button class="btn" onclick="resetCircColumn()">RESET</button>
       <hr/><div id="colOut"></div>
@@ -363,112 +370,122 @@ function renderConcreteStairs(){
 // ---------------- CALCULATIONS ----------------
 // FOOTING
 function calcFooting(){
-  const L=+document.getElementById('fL').value, W=+document.getElementById('fW').value, T=+document.getElementById('fT').value, N=+document.getElementById('fN').value;
-  const fOut=document.getElementById('fOut');
-  if(L<=0||W<=0||T<=0||N<=0) return fOut.innerHTML=`<div class="out">ENTER VALID NUMBERS</div>`;
+  const L=+fL.value, W=+fW.value, T=+fT.value, N=+fN.value;
+  const out=fOut;
+  if(L<=0||W<=0||T<=0||N<=0) return out.innerHTML=`<div class="out">ENTER VALID NUMBERS</div>`;
   const vol=L*W*T*N;
-  showFooting(vol,fOut);
-}
-function showFooting(vol,outEl){
   const cement=Math.ceil(vol*9);
-  outEl.innerHTML=`
+  out.innerHTML=`
     <div class="out">VOLUME: ${vol.toFixed(3)} CU.M</div>
     <div class="out small">CEMENT: ${cement} BAGS</div>
     <div class="out small">SAND: ${(vol*0.5).toFixed(2)} CU.M</div>
-    <div class="out small">GRAVEL: ${(vol*1).toFixed(2)} CU.M</div>`;
+    <div class="out small">GRAVEL: ${(vol*1).toFixed(2)} CU.M</div>
+  `;
 }
-function resetFooting(){ document.getElementById('fL').value=0; document.getElementById('fW').value=0; document.getElementById('fT').value=0; document.getElementById('fN').value=0; document.getElementById('fOut').innerHTML=''; }
+
+function resetFooting(){
+  fL.value=fW.value=fT.value=fN.value=0;
+  fOut.innerHTML='';
+}
 
 // WALL FOOTING
 function calcWallFooting(){
-  const L=+document.getElementById('wfL').value, H=+document.getElementById('wfH').value, T=+document.getElementById('wfT').value, N=+document.getElementById('wfN').value;
-  const wfOut=document.getElementById('wfOut');
-  if(L<=0||H<=0||T<=0||N<=0) return wfOut.innerHTML=`<div class="out">ENTER VALID NUMBERS</div>`;
+  const L=+wfL.value, H=+wfH.value, T=+wfT.value, N=+wfN.value;
+  const out=wfOut;
+  if(L<=0||H<=0||T<=0||N<=0) return out.innerHTML=`<div class="out">ENTER VALID NUMBERS</div>`;
   const vol=L*H*T*N;
-  wfOut.innerHTML=`
+  out.innerHTML=`
     <div class="out">VOLUME: ${vol.toFixed(3)} CU.M</div>
     <div class="out small">CEMENT: ${Math.ceil(vol*9)} BAGS</div>
     <div class="out small">SAND: ${(vol*0.5).toFixed(2)} CU.M</div>
-    <div class="out small">GRAVEL: ${(vol*1).toFixed(2)} CU.M</div>`;
-}
-function resetWallFooting(){ document.getElementById('wfL').value=0; document.getElementById('wfH').value=0; document.getElementById('wfT').value=0; document.getElementById('wfN').value=0; document.getElementById('wfOut').innerHTML=''; }
-
-// FLOOR SLAB
-function calcFloorSlab(){
-  const A=+document.getElementById('slabArea').value, T=+document.getElementById('slabThick').value;
-  const slabOut=document.getElementById('slabOut');
-  if(A<=0||T<=0) return slabOut.innerHTML=`<div class="out">ENTER VALID NUMBERS</div>`;
-  const vol=A*T;
-  slabOut.innerHTML=`
-    <div class="out">VOLUME: ${vol.toFixed(3)} CU.M</div>
-    <div class="out small">CEMENT: ${Math.ceil(vol*9)} BAGS</div>
-    <div class="out small">SAND: ${(vol*0.5).toFixed(2)} CU.M</div>
-    <div class="out small">GRAVEL: ${(vol*1).toFixed(2)} CU.M</div>`;
-}
-function resetFloorSlab(){ document.getElementById('slabArea').value=0; document.getElementById('slabThick').value=0; document.getElementById('slabOut').innerHTML=''; }
-
-// CONCRETE COLUMNS CALCULATION
-function calcRectColumn(){
-  const L=+document.getElementById('colL').value, W=+document.getElementById('colW').value, H=+document.getElementById('colH').value;
-  const colOut=document.getElementById('colOut');
-  if(L<=0||W<=0||H<=0) return colOut.innerHTML=`<div class="out">ENTER VALID NUMBERS</div>`;
-  const vol=L*W*H;
-  showColumn(vol,colOut);
+    <div class="out small">GRAVEL: ${(vol*1).toFixed(2)} CU.M</div>
+  `;
 }
 
-function calcCircColumn(){
-  const D=+document.getElementById('colD').value, H=+document.getElementById('colHc').value;
-  const colOut=document.getElementById('colOut');
-  if(D<=0||H<=0) return colOut.innerHTML=`<div class="out">ENTER VALID NUMBERS</div>`;
-  const radius=D/2;
-  const vol=Math.PI * radius * radius * H;
-  showColumn(vol,colOut);
+function resetWallFooting(){
+  wfL.value=wfH.value=wfT.value=wfN.value=0;
+  wfOut.innerHTML='';
 }
 
-function showColumn(vol,outEl){
-  outEl.innerHTML=`
-    <div class="out">VOLUME: ${vol.toFixed(3)} CU.M</div>
-    <div class="out small">CEMENT: ${Math.ceil(vol*9)} BAGS</div>
-    <div class="out small">SAND: ${(vol*0.5).toFixed(2)} CU.M</div>
-    <div class="out small">GRAVEL: ${(vol*1).toFixed(2)} CU.M</div>`;
-}
-function resetRectColumn(){ document.getElementById('colL').value=0; document.getElementById('colW').value=0; document.getElementById('colH').value=0; document.getElementById('colOut').innerHTML=''; }
-function resetCircColumn(){ document.getElementById('colD').value=0; document.getElementById('colHc').value=0; document.getElementById('colOut').innerHTML=''; }
-
-// CONCRETE BEAMS
+// BEAMS
 function calcBeams(){
-  const L = +document.getElementById('bL').value;
-  const W = +document.getElementById('bW').value;
-  const H = +document.getElementById('bH').value;
-  const N = +document.getElementById('bN').value;
-  const bOut=document.getElementById('bOut');
-
-  if(L <= 0 || W <= 0 || H <= 0 || N <= 0){
-    bOut.innerHTML = `<div class="out">ENTER VALID NUMBERS</div>`;
-    return;
-  }
-
-  const vol = L * W * H * N;
-  showBeams(vol,bOut);
-}
-
-function showBeams(vol,outEl){
-  outEl.innerHTML = `
+  const L=+bL.value, W=+bW.value, H=+bH.value, N=+bN.value;
+  const out=bOut;
+  if(L<=0||W<=0||H<=0||N<=0) return out.innerHTML=`<div class="out">ENTER VALID NUMBERS</div>`;
+  const vol=L*W*H*N;
+  out.innerHTML=`
     <div class="out">VOLUME: ${vol.toFixed(3)} CU.M</div>
-    <div class="out small">CEMENT: ${Math.ceil(vol * 9)} BAGS</div>
-    <div class="out small">SAND: ${(vol * 0.5).toFixed(2)} CU.M</div>
-    <div class="out small">GRAVEL: ${(vol * 1).toFixed(2)} CU.M</div>
+    <div class="out small">CEMENT: ${Math.ceil(vol*9)} BAGS</div>
+    <div class="out small">SAND: ${(vol*0.5).toFixed(2)} CU.M</div>
+    <div class="out small">GRAVEL: ${(vol*1).toFixed(2)} CU.M</div>
   `;
 }
 
 function resetBeams(){
-  document.getElementById('bL').value = 0;
-  document.getElementById('bW').value = 0;
-  document.getElementById('bH').value = 0;
-  document.getElementById('bN').value = 0;
-  document.getElementById('bOut').innerHTML = '';
+  bL.value=bW.value=bH.value=bN.value=0;
+  bOut.innerHTML='';
 }
-</script>
 
+// SLAB
+function calcFloorSlab(){
+  const A=+slabArea.value, T=+slabThick.value;
+  const out=slabOut;
+  if(A<=0||T<=0) return out.innerHTML=`<div class="out">ENTER VALID NUMBERS</div>`;
+  const vol=A*T;
+  out.innerHTML=`
+    <div class="out">VOLUME: ${vol.toFixed(3)} CU.M</div>
+    <div class="out small">CEMENT: ${Math.ceil(vol*9)} BAGS</div>
+    <div class="out small">SAND: ${(vol*0.5).toFixed(2)} CU.M</div>
+    <div class="out small">GRAVEL: ${(vol*1).toFixed(2)} CU.M</div>
+  `;
+}
+
+function resetFloorSlab(){
+  slabArea.value=slabThick.value=0;
+  slabOut.innerHTML='';
+}
+
+// RECTANGULAR COLUMN
+function calcRectColumn(){
+  const L=+colL.value, W=+colW.value, H=+colH.value, N=+colN.value;
+  const out=colOut;
+  if(L<=0||W<=0||H<=0||N<=0) return out.innerHTML=`<div class="out">ENTER VALID NUMBERS</div>`;
+  const vol=L*W*H*N;
+
+  out.innerHTML=`
+    <div class="out">VOLUME: ${vol.toFixed(3)} CU.M</div>
+    <div class="out small">CEMENT: ${Math.ceil(vol*9)} BAGS</div>
+    <div class="out small">SAND: ${(vol*0.5).toFixed(2)} CU.M</div>
+    <div class="out small">GRAVEL: ${(vol*1).toFixed(2)} CU.M</div>
+  `;
+}
+
+function resetRectColumn(){
+  colL.value=colW.value=colH.value=colN.value=0;
+  colOut.innerHTML='';
+}
+
+// CIRC COLUMN
+function calcCircColumn(){
+  const D=+colD.value, H=+colHc.value, N=+colNc.value;
+  const out=colOut;
+  if(D<=0||H<=0||N<=0) return out.innerHTML=`<div class="out">ENTER VALID NUMBERS</div>`;
+  const radius=D/2;
+  const vol=(Math.PI * radius * radius * H) * N;
+
+  out.innerHTML=`
+    <div class="out">VOLUME: ${vol.toFixed(3)} CU.M</div>
+    <div class="out small">CEMENT: ${Math.ceil(vol*9)} BAGS</div>
+    <div class="out small">SAND: ${(vol*0.5).toFixed(2)} CU.M</div>
+    <div class="out small">GRAVEL: ${(vol*1).toFixed(2)} CU.M</div>
+  `;
+}
+
+function resetCircColumn(){
+  colD.value=colHc.value=colNc.value=0;
+  colOut.innerHTML='';
+}
+
+</script>
 </body>
 </html>
