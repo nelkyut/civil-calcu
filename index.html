@@ -281,7 +281,27 @@ function renderWallFooting(){
 
 // CONCRETE BEAMS
 function renderConcreteBeams(){
-  main.innerHTML='<h2>CONCRETE BEAMS INPUTS HERE</h2>';
+  main.innerHTML = `
+    <h2>CONCRETE BEAMS</h2>
+
+    <div class="row"><label>LENGTH (M)</label>
+      <input id="bL" type="number" value="0"></div>
+
+    <div class="row"><label>WIDTH (M)</label>
+      <input id="bW" type="number" value="0"></div>
+
+    <div class="row"><label>HEIGHT (M)</label>
+      <input id="bH" type="number" value="0"></div>
+
+    <div class="row"><label>NUMBER OF BEAMS</label>
+      <input id="bN" type="number" value="0"></div>
+
+    <button class="btn" onclick="calcBeams()">COMPUTE</button>
+    <button class="btn" onclick="resetBeams()">RESET</button>
+
+    <hr/>
+    <div id="bOut"></div>
+  `;
 }
 
 // FLOOR SLAB
