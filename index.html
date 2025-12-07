@@ -9,19 +9,22 @@
 :root{
   --accent:#ffcc00;       
   --accent-dark:#e6b800;
-  --card:#ffffffdd;
+  --bg:#f2f2f2;
+  --card:#ffffffcc;
   --muted:#333;
   --btn:#ff9900;
   --btn-hover:#e68a00;
   --text:#111;
-  font-family: 'Arial', sans-serif;
+  font-family:'Arial',sans-serif;
 }
 
 body{
+  background:url('wall.png');
+  background-size:cover;
+  background-position:center;
+  background-attachment:fixed;
   margin:0;
   padding:20px;
-  background:url('wall.png') no-repeat center center fixed;
-  background-size:cover;
 }
 
 .app{
@@ -35,11 +38,14 @@ header{
   border-radius:10px;
   text-align:center;
   color:var(--text);
-  box-shadow:0 3px 8px rgba(0,0,0,0.25);
+  box-shadow:0 3px 8px rgba(0,0,0,0.3);
 }
+
 header h1{
   margin:0;
   font-size:22px;
+  font-weight:800;
+  text-transform:uppercase;
 }
 
 .tiles{
@@ -54,7 +60,7 @@ header h1{
   border-radius:10px;
   text-align:center;
   cursor:pointer;
-  box-shadow:0 3px 8px rgba(0,0,0,0.2);
+  box-shadow:0 2px 6px rgba(0,0,0,0.25);
   transition:0.2s;
   display:flex;
   flex-direction:column;
@@ -62,7 +68,13 @@ header h1{
   align-items:center;
   aspect-ratio:1/1;
   padding:10px;
-  font-weight:bold;
+  font-weight:700;
+}
+
+.tile:hover{
+  transform:scale(1.05);
+  background:#fff;
+  box-shadow:0 4px 10px rgba(0,0,0,0.35);
 }
 
 .subtabs{
@@ -80,18 +92,19 @@ header h1{
   font-size:13px;
   box-shadow:0 1px 2px rgba(0,0,0,.2);
   text-transform:uppercase;
-  font-weight:600;
+  font-weight:700;
 }
+
 .subtab.active{
-  background:#fff;
+  background:linear-gradient(180deg,var(--card),#fff);
   border:2px solid var(--accent-dark);
 }
 
 .card{
-  background:var(--card);
+  background:#ffffffdd;
   padding:14px;
   border-radius:10px;
-  box-shadow:0 3px 8px rgba(0,0,0,.25);
+  box-shadow:0 2px 6px rgba(0,0,0,.25);
   margin-bottom:12px;
 }
 
@@ -106,6 +119,7 @@ label{
   flex:1;
   color:var(--muted);
   font-size:13px;
+  font-weight:700;
   text-transform:uppercase;
 }
 
@@ -113,7 +127,8 @@ input[type=number], select{
   width:140px;
   padding:8px;
   border-radius:6px;
-  border:1px solid #ccc;
+  border:1px solid #ddd;
+  font-weight:700;
 }
 
 .btn{
@@ -122,31 +137,30 @@ input[type=number], select{
   color:#fff;
   padding:8px 12px;
   border-radius:6px;
-  font-weight:600;
+  font-weight:700;
   cursor:pointer;
   text-align:center;
   text-transform:uppercase;
   margin-right:6px;
-  box-shadow:0 2px 5px rgba(0,0,0,0.3);
+}
+
+.btn:hover{
+  background:var(--btn-hover);
 }
 
 .out{
-  background:#111c;
+  background:#222;
   color:#fff;
   padding:8px;
   border-radius:6px;
   text-align:center;
-  font-weight:600;
+  font-weight:700;
   margin-top:10px;
-}
-
-footer{
-  margin-top:14px;
-  font-size:12px;
-  color:#fff;
-  text-shadow:0 1px 2px #000;
-  text-align:center;
   text-transform:uppercase;
+}
+.out.small{
+  font-size:13px;
+  padding:6px;
 }
 </style>
 </head>
@@ -166,170 +180,234 @@ footer{
   <div class="card" id="main"></div>
 </div>
 
-<footer>
+<footer style="margin-top:14px;font-size:12px;color:#fff;text-align:center;text-shadow:1px 1px 3px #000;text-transform:uppercase;">
   NELKYUTIE - CESO, 550ABG @ DECEMBER 2025.
 </footer>
 
 </div>
 
 <script>
+const categories=[
+  {id:'concreting', title:'CONCRETING', subtabs:['FOOTING','WALL FOOTING','CONCRETE BEAMS','FLOOR SLAB','CONCRETE COLUMNS','CONCRETE STAIRS']},
+  {id:'masonry', title:'MASONRY', subtabs:['CHB WALL']},
+  {id:'reinforcement', title:'REINFORCEMENT', subtabs:[]},
+  {id:'carpentry', title:'CARPENTRY', subtabs:[]},
+  {id:'roofing', title:'ROOFING WORKS', subtabs:[]},
+  {id:'tiling', title:'TILING WORKS', subtabs:[]},
+  {id:'painting', title:'PAINTING WORKS', subtabs:[]},
+  {id:'scaffolding', title:'SCAFFOLDING', subtabs:[]}
+];
 
-// MAIN MENU
-const categories = {
-  "CONCRETING": [
-    "FOOTING",
-    "WALL FOOTING",
-    "CONCRETE BEAMS",
-    "FLOOR SLAB",
-    "FLOOR SLAB - BY AREA",
-    "COLUMNS RECTANGULAR",
-    "COLUMNS CIRCULAR",
-    "CONCRETE STAIRS"
-  ],
+const frontPage=document.getElementById('frontPage');
+const categoryPage=document.getElementById('categoryPage');
+const main=document.getElementById('main');
 
-  "MASONRY": [],
-  "REINFORCEMENT": [],
-  "CARPENTRY": []
-};
-
-const front = document.getElementById("frontPage");
-const catPage = document.getElementById("categoryPage");
-const subtabs = document.getElementById("subtabs");
-const main = document.getElementById("main");
-
-// Build tiles
-Object.keys(categories).forEach(cat=>{
-  let d=document.createElement("div");
-  d.className="tile";
-  d.innerHTML=cat;
-  d.onclick=()=>openCategory(cat);
-  front.appendChild(d);
+categories.forEach(cat=>{
+  const tile=document.createElement('div');
+  tile.className='tile';
+  tile.textContent=cat.title;
+  tile.onclick=()=>openCategory(cat);
+  frontPage.appendChild(tile);
 });
 
-// NAVIGATION
 function goHome(){
-  catPage.style.display="none";
-  front.style.display="grid";
+  categoryPage.style.display='none';
+  frontPage.style.display='grid';
 }
 
 function openCategory(cat){
-  front.style.display="none";
-  catPage.style.display="block";
+  frontPage.style.display='none';
+  categoryPage.style.display='block';
 
-  subtabs.innerHTML="";
-  categories[cat].forEach((s,i)=>{
-    let b=document.createElement("div");
-    b.className="subtab";
-    b.innerHTML=s;
-    b.onclick=()=>openSubTab(cat,s,b);
-    if(i===0){ setTimeout(()=>b.click(),50); }
-    subtabs.appendChild(b);
-  });
+  const subtabsEl=document.getElementById('subtabs');
+  if(cat.subtabs.length>0){
+    subtabsEl.innerHTML='';
+    cat.subtabs.forEach((s,i)=>{
+      const st=document.createElement('div');
+      st.className='subtab';
+      st.textContent=s;
+      st.onclick=()=>{selectSubtab(cat.id,s);};
+      if(i===0) st.classList.add('active');
+      subtabsEl.appendChild(st);
+    });
+    selectSubtab(cat.id,cat.subtabs[0]);
+  }else{
+    subtabsEl.innerHTML='';
+    main.innerHTML=`<h2>${cat.title}</h2><p>INPUTS HERE</p>`;
+  }
 }
 
-// OPEN SUBTAB
-function openSubTab(cat,sub,btn){
-  document.querySelectorAll(".subtab").forEach(x=>x.classList.remove("active"));
-  btn.classList.add("active");
+// -------------------- CONCRETING SUBTABS --------------------
+function selectSubtab(catId,subtab){
+  document.querySelectorAll('.subtab').forEach(x=>x.classList.toggle('active',x.textContent===subtab));
 
-  // LOAD COMPONENT
-  if(sub==="CONCRETE BEAMS") renderConcreteBeams();
-  else main.innerHTML="<div>Select calculator...</div>";
+  if(catId==='concreting'){
+    if(subtab==='FOOTING') renderFooting();
+    if(subtab==='WALL FOOTING') renderWallFooting();
+    if(subtab==='CONCRETE BEAMS') renderConcreteBeams();
+    if(subtab==='FLOOR SLAB') renderFloorSlab();
+    if(subtab==='CONCRETE COLUMNS') renderConcreteColumns();
+    if(subtab==='CONCRETE STAIRS') renderConcreteStairs();
+  }
 }
 
-//////////////////////////////////////////////////////////////////
-// ⭐⭐⭐⭐⭐ CONCRETE BEAMS — FULL WORKING CALCULATOR ⭐⭐⭐⭐⭐
-//////////////////////////////////////////////////////////////////
-
-function renderConcreteBeams(){
-
-main.innerHTML = `
-<h2 style="text-align:center;margin:0 0 10px;">CONCRETE BEAMS</h2>
-
-<div class="row"><label>Length (m)</label><input id="bm_len" type="number" value="0"></div>
-<div class="row"><label>Width (m)</label><input id="bm_w" type="number" value="0"></div>
-<div class="row"><label>Height (m)</label><input id="bm_h" type="number" value="0"></div>
-<div class="row"><label>Quantity</label><input id="bm_qty" type="number" value="1"></div>
-
-<div class="row">
-<label>Concrete Class</label>
-<select id="bm_class">
-  <option>Class A</option>
-  <option>Class B</option>
-  <option>Class C</option>
-</select>
-</div>
-
-<hr>
-
-<h3>Main Bars</h3>
-<div class="row"><label>Bar Size</label>
-<select id="bm_mainbar">
-  <option>10mm</option>
-  <option>12mm</option>
-  <option>16mm</option>
-</select></div>
-
-<div class="row"><label>Top Bars</label><input id="bm_top" type="number" value="2"></div>
-<div class="row"><label>Bottom Bars</label><input id="bm_bot" type="number" value="2"></div>
-
-<hr>
-
-<h3>Stirrups</h3>
-<div class="row"><label>Spacing (m)</label><input id="bm_space" type="number" value="0.15"></div>
-
-<div class="row">
-<label>Stirrups Bar Size</label>
-<select id="bm_stirrup_size">
-  <option>8mm</option>
-  <option>10mm</option>
-</select></div>
-
-<div class="row"><label>Hook Allowance (m)</label><input id="bm_hook" type="number" value="0.10"></div>
-
-<button class="btn" onclick="computeBeam()">Compute</button>
-
-<div id="bm_out"></div>
-`;
-}
-
-// COMPUTATION FUNCTION
-function computeBeam(){
-  let L = parseFloat(bm_len.value);
-  let W = parseFloat(bm_w.value);
-  let H = parseFloat(bm_h.value);
-  let Q = parseFloat(bm_qty.value);
-
-  let top = parseFloat(bm_top.value);
-  let bot = parseFloat(bm_bot.value);
-
-  let space = parseFloat(bm_space.value);
-  let hook = parseFloat(bm_hook.value);
-
-  // Concrete Volume
-  let volume = L * W * H * Q;
-
-  // Main Bars
-  let dev = 0.40; // standard dev length
-  let mainLenPerBar = L + 2 * dev;
-  let totalBars = (top + bot) * Q;
-  let totalMainLen = mainLenPerBar * (top + bot) * Q;
-
-  // Stirrups
-  let stirrupCount = Math.ceil(L / space);
-  let stirrupLen = (2 * W) + (2 * H) + hook;
-  let totalStirrupLen = stirrupCount * stirrupLen * Q;
-
-  bm_out.innerHTML = `
-    <div class="out">Concrete Volume: ${volume.toFixed(3)} m³</div>
-    <div class="out">Main Bars Needed: ${totalBars} pcs</div>
-    <div class="out">Main Bars Total Length: ${totalMainLen.toFixed(2)} m</div>
-    <div class="out">No. of Stirrups: ${stirrupCount * Q} pcs</div>
-    <div class="out">Stirrup per Piece Length: ${stirrupLen.toFixed(2)} m</div>
-    <div class="out">Total Stirrup Steel Length: ${totalStirrupLen.toFixed(2)} m</div>
+// FOOTING
+function renderFooting(){
+  main.innerHTML=`
+    <h2>FOOTING</h2>
+    <div class="row"><label>LENGTH (M)</label><input id="fL" type="number" value="0"></div>
+    <div class="row"><label>WIDTH (M)</label><input id="fW" type="number" value="0"></div>
+    <div class="row"><label>THICKNESS (M)</label><input id="fT" type="number" value="0"></div>
+    <div class="row"><label>QUANTITY</label><input id="fN" type="number" value="0"></div>
+    <button class="btn" onclick="calcFooting()">COMPUTE</button>
+    <button class="btn" onclick="resetFooting()">RESET</button>
+    <hr/><div id="fOut"></div>
   `;
 }
 
+// WALL FOOTING
+function renderWallFooting(){
+  main.innerHTML=`
+    <h2>WALL FOOTING</h2>
+    <div class="row"><label>LENGTH (M)</label><input id="wfL" type="number" value="0"></div>
+    <div class="row"><label>HEIGHT (M)</label><input id="wfH" type="number" value="0"></div>
+    <div class="row"><label>THICKNESS (M)</label><input id="wfT" type="number" value="0"></div>
+    <div class="row"><label>QUANTITY</label><input id="wfN" type="number" value="0"></div>
+    <button class="btn" onclick="calcWallFooting()">COMPUTE</button>
+    <button class="btn" onclick="resetWallFooting()">RESET</button>
+    <hr/><div id="wfOut"></div>
+  `;
+}
+
+// CONCRETE BEAMS
+function renderConcreteBeams(){
+  main.innerHTML='<h2>CONCRETE BEAMS INPUTS HERE</h2>';
+}
+
+// FLOOR SLAB
+function renderFloorSlab(){
+  main.innerHTML=`
+    <h2>FLOOR SLAB - BY AREA</h2>
+    <div class="row"><label>AREA (SQ.M)</label><input id="slabArea" type="number" value="0"></div>
+    <div class="row"><label>THICKNESS (M)</label><input id="slabThick" type="number" value="0"></div>
+    <button class="btn" onclick="calcFloorSlab()">COMPUTE</button>
+    <button class="btn" onclick="resetFloorSlab()">RESET</button>
+    <hr/><div id="slabOut"></div>
+  `;
+}
+
+// CONCRETE COLUMNS
+function renderConcreteColumns(){
+  main.innerHTML=`
+    <h2>CONCRETE COLUMNS</h2>
+    <div class="subtabs" id="columnSubtabs">
+      <div class="subtab active" onclick="selectColumnType('rect')">RECTANGULAR</div>
+      <div class="subtab" onclick="selectColumnType('circ')">CIRCULAR</div>
+    </div>
+    <div id="columnContent"></div>
+  `;
+  selectColumnType('rect');
+}
+
+function selectColumnType(type){
+  document.querySelectorAll('#columnSubtabs .subtab')
+    .forEach(x=>x.classList.toggle('active',x.textContent.toLowerCase().includes(type==='rect'?'rect':'circ')));
+
+  const content=document.getElementById('columnContent');
+
+  if(type==='rect'){
+    content.innerHTML=`
+      <div class="row"><label>LENGTH (M)</label><input id="colL" type="number" value="0"></div>
+      <div class="row"><label>WIDTH (M)</label><input id="colW" type="number" value="0"></div>
+      <div class="row"><label>HEIGHT (M)</label><input id="colH" type="number" value="0"></div>
+      <button class="btn" onclick="calcRectColumn()">COMPUTE</button>
+      <button class="btn" onclick="resetRectColumn()">RESET</button>
+      <hr/><div id="colOut"></div>
+    `;
+  } else {
+    content.innerHTML=`
+      <div class="row"><label>DIAMETER (M)</label><input id="colD" type="number" value="0"></div>
+      <div class="row"><label>HEIGHT (M)</label><input id="colHc" type="number" value="0"></div>
+      <button class="btn" onclick="calcCircColumn()">COMPUTE</button>
+      <button class="btn" onclick="resetCircColumn()">RESET</button>
+      <hr/><div id="colOut"></div>
+    `;
+  }
+}
+
+// CONCRETE STAIRS
+function renderConcreteStairs(){
+  main.innerHTML='<h2>CONCRETE STAIRS INPUTS HERE</h2>';
+}
+
+// ---------------- CALCULATIONS ----------------
+function calcFooting(){
+  const L=+fL.value, W=+fW.value, T=+fT.value, N=+fN.value;
+  if(L<=0||W<=0||T<=0||N<=0) return fOut.innerHTML=`<div class="out">ENTER VALID NUMBERS</div>`;
+  const vol=L*W*T*N;
+  showFooting(vol);
+}
+function showFooting(vol){
+  const cement=Math.ceil(vol*9);
+  fOut.innerHTML=`
+    <div class="out">VOLUME: ${vol.toFixed(3)} CU.M</div>
+    <div class="out small">CEMENT: ${cement} BAGS</div>
+    <div class="out small">SAND: ${(vol*0.5).toFixed(2)} CU.M</div>
+    <div class="out small">GRAVEL: ${(vol*1).toFixed(2)} CU.M</div>`;
+}
+function resetFooting(){ fL.value=fW.value=fT.value=fN.value=0; fOut.innerHTML=''; }
+
+function calcWallFooting(){
+  const L=+wfL.value, H=+wfH.value, T=+wfT.value, N=+wfN.value;
+  if(L<=0||H<=0||T<=0||N<=0) return wfOut.innerHTML=`<div class="out">ENTER VALID NUMBERS</div>`;
+  const vol=L*H*T*N;
+  showWallFooting(vol);
+}
+function showWallFooting(vol){
+  wfOut.innerHTML=`
+    <div class="out">VOLUME: ${vol.toFixed(3)} CU.M</div>
+    <div class="out small">CEMENT: ${Math.ceil(vol*9)} BAGS</div>
+    <div class="out small">SAND: ${(vol*0.5).toFixed(2)} CU.M</div>
+    <div class="out small">GRAVEL: ${(vol*1).toFixed(2)} CU.M</div>`;
+}
+function resetWallFooting(){ wfL.value=wfH.value=wfT.value=wfN.value=0; wfOut.innerHTML=''; }
+
+function calcFloorSlab(){
+  const A=+slabArea.value, T=+slabThick.value;
+  if(A<=0||T<=0) return slabOut.innerHTML=`<div class="out">ENTER VALID NUMBERS</div>`;
+  const vol=A*T;
+  slabOut.innerHTML=`
+    <div class="out">VOLUME: ${vol.toFixed(3)} CU.M</div>
+    <div class="out small">CEMENT: ${Math.ceil(vol*9)} BAGS</div>
+    <div class="out small">SAND: ${(vol*0.5).toFixed(2)} CU.M</div>
+    <div class="out small">GRAVEL: ${(vol*1).toFixed(2)} CU.M</div>`;
+}
+function resetFloorSlab(){ slabArea.value=slabThick.value=0; slabOut.innerHTML=''; }
+
+function calcRectColumn(){
+  const L=+colL.value, W=+colW.value, H=+colH.value;
+  if(L<=0||W<=0||H<=0) return colOut.innerHTML=`<div class="out">ENTER VALID NUMBERS</div>`;
+  const vol=L*W*H;
+  showColumn(vol);
+}
+
+function calcCircColumn(){
+  const D=+colD.value, H=+colHc.value;
+  if(D<=0||H<=0) return colOut.innerHTML=`<div class="out">ENTER VALID NUMBERS</div>`;
+  const radius=D/2;
+  const vol=3.1416*radius*radius*H;
+  showColumn(vol);
+}
+
+function showColumn(vol){
+  colOut.innerHTML=`
+    <div class="out">VOLUME: ${vol.toFixed(3)} CU.M</div>
+    <div class="out small">CEMENT: ${Math.ceil(vol*9)} BAGS</div>
+    <div class="out small">SAND: ${(vol*0.5).toFixed(2)} CU.M</div>
+    <div class="out small">GRAVEL: ${(vol*1).toFixed(2)} CU.M</div>`;
+}
+function resetRectColumn(){ colL.value=colW.value=colH.value=0; colOut.innerHTML=''; }
+function resetCircColumn(){ colD.value=colHc.value=0; colOut.innerHTML=''; }
 </script>
 
 </body>
