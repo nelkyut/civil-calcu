@@ -426,6 +426,35 @@ function showColumn(vol){
     <div class="out small">SAND: ${(vol*0.5).toFixed(2)} CU.M</div>
     <div class="out small">GRAVEL: ${(vol*1).toFixed(2)} CU.M</div>`;
 }
+  // ---------------- CONCRETE BEAMS ----------------
+function calcBeams(){
+  const L = +bL.value;
+  const W = +bW.value;
+  const H = +bH.value;
+  const N = +bN.value;
+
+  if(L <= 0 || W <= 0 || H <= 0 || N <= 0){
+    bOut.innerHTML = `<div class="out">ENTER VALID NUMBERS</div>`;
+    return;
+  }
+
+  const vol = L * W * H * N;
+  showBeams(vol);
+}
+
+function showBeams(vol){
+  bOut.innerHTML = `
+    <div class="out">VOLUME: ${vol.toFixed(3)} CU.M</div>
+    <div class="out small">CEMENT: ${Math.ceil(vol * 9)} BAGS</div>
+    <div class="out small">SAND: ${(vol * 0.5).toFixed(2)} CU.M</div>
+    <div class="out small">GRAVEL: ${(vol * 1).toFixed(2)} CU.M</div>
+  `;
+}
+
+function resetBeams(){
+  bL.value = bW.value = bH.value = bN.value = 0;
+  bOut.innerHTML = '';
+}
 function resetRectColumn(){ colL.value=colW.value=colH.value=0; colOut.innerHTML=''; }
 function resetCircColumn(){ colD.value=colHc.value=0; colOut.innerHTML=''; }
 </script>
